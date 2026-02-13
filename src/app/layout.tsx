@@ -26,9 +26,9 @@ const geistMono = Geist_Mono({
 
 // Metadata for SEO — this sets the <title> and <meta description> tags
 export const metadata: Metadata = {
-  title: 'VPPCompare - Compare Virtual Power Plants in Australia',
+  title: 'VPPCompare - Compare Virtual Power Plants in Colorado & the USA',
   description:
-    'Find and compare the best Virtual Power Plant programs in Australia. Compare feed-in rates, signup bonuses, and battery compatibility.',
+    'Find and compare the best Virtual Power Plant programs in Colorado and across the United States. Compare feed-in rates, signup bonuses, and battery compatibility.',
 }
 
 export default function RootLayout({

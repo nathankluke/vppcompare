@@ -4,76 +4,21 @@
 // The landing page for VPPCompare. It has three sections:
 //   1. Hero — headline, subtitle, and call-to-action button
 //   2. How It Works — three simple steps
-//   3. Featured VPPs — preview of three VPP cards with hardcoded data
+//   3. Featured VPPs — top 3 VPPs fetched from Supabase
+//
+// This is a Server Component — data is fetched on the server before the
+// page is sent to the browser, so it loads fast and is SEO-friendly.
 // =============================================================================
 
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import VPPCard from '@/components/vpp/VPPCard'
-import { VPP } from '@/types/vpp'
+import { getFeaturedVPPs } from '@/lib/getVPPs'
 
-// -------------------------------------------------------
-// Placeholder VPP data (hardcoded for now)
-// This will be replaced with real data from Supabase later
-// -------------------------------------------------------
-const featuredVPPs: VPP[] = [
-  {
-    id: '1',
-    name: 'Tesla Energy Plan',
-    provider: 'Tesla / Energy Locals',
-    description:
-      'Join the Tesla Virtual Power Plant and earn credits for sharing your Powerwall energy during peak demand.',
-    signup_bonus: 100,
-    feed_in_rate: 12,
-    controlled_load_discount: null,
-    battery_brands_supported: ['Tesla Powerwall', 'Tesla Powerwall 2', 'Tesla Powerwall 3'],
-    solar_required: true,
-    battery_required: true,
-    states_available: ['NSW', 'VIC', 'QLD', 'SA'],
-    website_url: 'https://www.tesla.com/en_au/energy',
-    logo_url: null,
-    created_at: '2026-01-01T00:00:00Z',
-    updated_at: '2026-01-01T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Simply Energy VPP',
-    provider: 'Simply Energy',
-    description:
-      'Simply Energy offers competitive feed-in rates and bonus credits for VPP participants with compatible batteries.',
-    signup_bonus: 200,
-    feed_in_rate: 10,
-    controlled_load_discount: 5,
-    battery_brands_supported: ['Tesla Powerwall', 'Sonnen', 'LG RESU'],
-    solar_required: true,
-    battery_required: true,
-    states_available: ['VIC', 'SA', 'QLD'],
-    website_url: 'https://www.simplyenergy.com.au',
-    logo_url: null,
-    created_at: '2026-01-01T00:00:00Z',
-    updated_at: '2026-01-01T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'AGL Virtual Power Plant',
-    provider: 'AGL Energy',
-    description:
-      'AGL connects your battery to their virtual power plant, helping stabilise the grid while you earn feed-in credits.',
-    signup_bonus: null,
-    feed_in_rate: 15,
-    controlled_load_discount: null,
-    battery_brands_supported: ['Tesla Powerwall', 'BYD', 'Alpha ESS'],
-    solar_required: true,
-    battery_required: true,
-    states_available: ['NSW', 'VIC', 'QLD', 'SA', 'TAS'],
-    website_url: 'https://www.agl.com.au',
-    logo_url: null,
-    created_at: '2026-01-01T00:00:00Z',
-    updated_at: '2026-01-01T00:00:00Z',
-  },
-]
+export default async function HomePage() {
+  // Fetch the top 3 VPPs from Supabase (runs on the server)
+  const featuredVPPs = await getFeaturedVPPs()
 
-export default function HomePage() {
   return (
     <div>
       {/* ================================================================
@@ -89,7 +34,7 @@ export default function HomePage() {
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Compare feed-in rates, signup bonuses, and battery compatibility
-            across Australia&apos;s top VPP programs. Make an informed choice
+            across Colorado&apos;s and America&apos;s top VPP programs. Make an informed choice
             and start saving.
           </p>
 
@@ -153,7 +98,7 @@ export default function HomePage() {
       </section>
 
       {/* ================================================================
-          SECTION 3: Featured VPPs
+          SECTION 3: Featured VPPs (live from Supabase!)
           ================================================================ */}
       <section className="py-16 px-4 bg-slate-50">
         <div className="max-w-6xl mx-auto">
@@ -161,7 +106,7 @@ export default function HomePage() {
             Featured VPPs
           </h2>
           <p className="text-center text-slate-500 mb-10">
-            Here are some popular Virtual Power Plant programs in Australia.
+            Here are some popular Virtual Power Plant programs in the United States.
           </p>
 
           {/* VPP Cards Grid */}

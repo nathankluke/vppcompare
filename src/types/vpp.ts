@@ -14,13 +14,13 @@ export interface VPP {
   name: string;                           // e.g. "Tesla Energy Plan"
   provider: string;                       // e.g. "Tesla / Energy Locals"
   description: string;                    // Short summary of the VPP program
-  signup_bonus: number | null;            // One-time bonus in AUD, or null if none
+  signup_bonus: number | null;            // One-time bonus in USD, or null if none
   feed_in_rate: number | null;            // Cents per kWh exported to the grid
   controlled_load_discount: number | null; // Percentage discount, or null if none
   battery_brands_supported: string[];     // e.g. ["Tesla Powerwall", "BYD"]
   solar_required: boolean;                // Does the customer need solar panels?
   battery_required: boolean;              // Does the customer need a home battery?
-  states_available: string[];             // Australian states, e.g. ["NSW", "VIC", "QLD"]
+  states_available: string[];             // US states, e.g. ["CO", "CA", "TX"]
   website_url: string;                    // Link to the provider's VPP page
   logo_url: string | null;               // URL to the provider's logo image
   created_at: string;                     // ISO timestamp of when the record was created

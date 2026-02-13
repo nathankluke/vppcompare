@@ -20,7 +20,7 @@ export default function HowItWorksPage() {
           </h1>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
             We make it easy to find, compare, and choose the right Virtual Power
-            Plant program for your home in Australia.
+            Plant program for your home in Colorado and across the USA.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
                 </h3>
                 <p className="text-slate-500 leading-relaxed">
                   Visit our Compare page to see all Virtual Power Plant programs
-                  currently available in Australia. Each listing includes the
+                  currently available in the United States. Each listing includes the
                   provider name, feed-in rate, signup bonus, supported battery
                   brands, and which states the program operates in.
                 </p>
@@ -58,8 +58,8 @@ export default function HowItWorksPage() {
                   Filter &amp; Sort
                 </h3>
                 <p className="text-slate-500 leading-relaxed">
-                  Use the filter bar to narrow results by your state (e.g. NSW,
-                  VIC, QLD). Sort by feed-in rate to find the highest paying
+                  Use the filter bar to narrow results by your state (e.g. CO,
+                  CA, TX). Sort by feed-in rate to find the highest paying
                   program, or by signup bonus if you want the best upfront deal.
                 </p>
               </div>
@@ -124,10 +124,11 @@ export default function HowItWorksPage() {
               signup bonuses from the VPP provider.
             </p>
             <p>
-              VPPs help stabilise the electricity grid, reduce reliance on
+              VPPs help stabilize the electricity grid, reduce reliance on
               fossil-fuel peaker plants, and put money back in your pocket.
-              They are a key part of Australia&apos;s transition to a cleaner,
-              more distributed energy system.
+              They are a key part of America&apos;s transition to a cleaner,
+              more distributed energy system — and Colorado is leading the way
+              with its strong solar resources and progressive energy policies.
             </p>
             <h3 className="text-lg font-semibold text-slate-800 pt-2">
               What do you need to join a VPP?
@@ -139,7 +140,7 @@ export default function HowItWorksPage() {
               </li>
               <li>
                 <strong>Home battery</strong> — a compatible battery (e.g.
-                Tesla Powerwall, BYD, Sonnen) is usually required.
+                Tesla Powerwall, Enphase, Generac) is usually required.
               </li>
               <li>
                 <strong>Internet connection</strong> — the VPP software needs to
@@ -147,7 +148,7 @@ export default function HowItWorksPage() {
               </li>
               <li>
                 <strong>Eligible location</strong> — VPP programs are available
-                in specific Australian states.
+                in specific US states. Colorado has several active programs.
               </li>
             </ul>
           </div>

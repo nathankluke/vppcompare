@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <p className="text-white font-bold text-lg">VPPCompare</p>
             <p className="text-sm text-slate-400 mt-1">
-              Compare Virtual Power Plants in Australia
+              Compare Virtual Power Plants in Colorado &amp; the USA
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export default function Footer() {
         <div className="text-center text-sm text-slate-400">
           <p>&copy; 2026 VPPCompare.com. All rights reserved.</p>
           <p className="mt-1">
-            Helping Australians find the best Virtual Power Plant programs.
+            Helping Americans find the best Virtual Power Plant programs.
           </p>
         </div>
       </div>
