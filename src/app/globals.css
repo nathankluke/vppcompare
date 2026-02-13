@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* =============================================================================
+   Custom CSS Variables for VPPCompare Brand
+   =============================================================================
+   These variables define the color palette used throughout the site.
+   You can reference them in Tailwind classes or custom CSS.
+   For example: style={{ color: 'var(--color-primary)' }}
+   ============================================================================= */
+
+:root {
+  --color-primary: #1e40af;       /* Blue 800 — main brand color */
+  --color-primary-light: #3b82f6; /* Blue 500 — lighter accent */
+  --color-secondary: #059669;     /* Emerald 600 — for success/green elements */
+  --color-accent: #f59e0b;        /* Amber 500 — call-to-action highlights */
+  --color-background: #f8fafc;    /* Slate 50 — page background */
+  --color-text: #0f172a;          /* Slate 900 — primary text */
+  --color-text-muted: #64748b;    /* Slate 500 — secondary/muted text */
+}
