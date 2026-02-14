@@ -15,6 +15,9 @@ import Button from '@/components/ui/Button'
 import VPPCard from '@/components/vpp/VPPCard'
 import { getFeaturedVPPs } from '@/lib/getVPPs'
 
+// Tell Next.js to fetch fresh data on every request (not cache at build time)
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   // Fetch the top 3 VPPs from Supabase (runs on the server)
   const featuredVPPs = await getFeaturedVPPs()

@@ -13,6 +13,9 @@
 import VPPFilterBar from '@/components/vpp/VPPFilterBar'
 import { getAllVPPs } from '@/lib/getVPPs'
 
+// Tell Next.js to fetch fresh data on every request (not cache at build time)
+export const dynamic = 'force-dynamic'
+
 export default async function ComparePage() {
   // Fetch all VPPs from Supabase (runs on the server)
   const vpps = await getAllVPPs()
