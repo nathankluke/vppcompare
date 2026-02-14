@@ -1,15 +1,14 @@
 // =============================================================================
 // VPP Filter Bar Component (Client Component)
 // =============================================================================
-// This component handles filtering VPPs by state and sorting by different
-// fields. It's a "client component" (note the "use client" below) because
-// it needs to respond to user interactions (dropdown changes) in the browser.
+// This component handles filtering VPPs by state, sorting by different
+// fields, and toggling between card and table views.
 //
 // How it works:
 //   1. Receives ALL VPPs from the server (passed as a prop)
-//   2. User picks a state filter or sort option
+//   2. User picks a state filter, sort option, or view mode
 //   3. Component filters/sorts the list in the browser (no server call needed)
-//   4. Displays the filtered VPP cards
+//   4. Displays the filtered VPP cards or table
 // =============================================================================
 
 'use client'
@@ -17,6 +16,8 @@
 import { useState, useMemo } from 'react'
 import { VPP } from '@/types/vpp'
 import VPPCard from './VPPCard'
+import VPPTable from './VPPTable'
+import ViewToggle from '@/components/ui/ViewToggle'
 
 interface VPPFilterBarProps {
   vpps: VPP[]  // All VPPs fetched from the database (passed from server)
@@ -24,10 +25,11 @@ interface VPPFilterBarProps {
 
 export default function VPPFilterBar({ vpps }: VPPFilterBarProps) {
   // -------------------------------------------------------
-  // State — tracks the user's current filter/sort choices
+  // State — tracks the user's current filter/sort/view choices
   // -------------------------------------------------------
   const [selectedState, setSelectedState] = useState('All States')
   const [sortBy, setSortBy] = useState('feed_in_rate')
+  const [view, setView] = useState<'card' | 'table'>('card')
 
   // -------------------------------------------------------
   // Build list of states from the actual VPP data
@@ -129,9 +131,12 @@ export default function VPPFilterBar({ vpps }: VPPFilterBarProps) {
             </select>
           </div>
 
-          {/* Results Count */}
-          <div className="flex-1 w-full sm:w-auto sm:text-right">
-            <p className="text-sm text-slate-500 sm:mt-6">
+          {/* View Toggle + Results Count */}
+          <div className="flex-1 w-full sm:w-auto sm:text-right space-y-2">
+            <div className="flex justify-end">
+              <ViewToggle view={view} onChange={setView} />
+            </div>
+            <p className="text-sm text-slate-500">
               Showing{' '}
               <span className="font-semibold text-slate-700">
                 {filteredAndSortedVPPs.length}
@@ -143,14 +148,18 @@ export default function VPPFilterBar({ vpps }: VPPFilterBarProps) {
       </div>
 
       {/* ================================================================
-          VPP Cards Grid (or empty state message)
+          VPP Cards Grid, Table, or Empty State
           ================================================================ */}
       {filteredAndSortedVPPs.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredAndSortedVPPs.map((vpp) => (
-            <VPPCard key={vpp.id} vpp={vpp} />
-          ))}
-        </div>
+        view === 'card' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredAndSortedVPPs.map((vpp) => (
+              <VPPCard key={vpp.id} vpp={vpp} />
+            ))}
+          </div>
+        ) : (
+          <VPPTable vpps={filteredAndSortedVPPs} />
+        )
       ) : (
         <div className="text-center py-16">
           <p className="text-2xl text-slate-400 mb-2">No VPPs found</p>

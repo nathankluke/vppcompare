@@ -50,3 +50,22 @@ export async function getFeaturedVPPs(): Promise<VPP[]> {
 
   return data as VPP[]
 }
+
+/**
+ * Fetch VPPs available in a specific state.
+ * Uses Supabase's `contains` filter for the states_available array.
+ */
+export async function getVPPsByState(stateCode: string): Promise<VPP[]> {
+  const { data, error } = await supabase
+    .from('vpps')
+    .select('*')
+    .contains('states_available', [stateCode])
+    .order('feed_in_rate', { ascending: false })
+
+  if (error) {
+    console.error(`Error fetching VPPs for state ${stateCode}:`, error.message)
+    return []
+  }
+
+  return data as VPP[]
+}

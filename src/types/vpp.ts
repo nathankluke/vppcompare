@@ -36,3 +36,16 @@ export interface VPPComparison {
   sortBy: keyof VPP;                      // Which field to sort by
   sortDirection: 'asc' | 'desc';          // Sort order
 }
+
+/**
+ * UserSetup — tracks what the user enters in the homepage filter form.
+ * Used to match VPPs to the user's home battery and solar setup.
+ */
+export interface UserSetup {
+  zip: string;                            // 5-digit US zip code
+  state: string;                          // 2-letter state code resolved from zip
+  batteryBrand: string;                   // e.g. "Tesla Powerwall", "Enphase", "None"
+  batteryCapacity: number;                // kWh (5-50)
+  hasSolar: boolean;                      // Does the user have solar panels?
+  solarSize: number;                      // kW (1-20), only relevant if hasSolar
+}
