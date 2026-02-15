@@ -1,25 +1,25 @@
 // =============================================================================
-// VPPCard Component
+// VPPCard Component (Updated)
 // =============================================================================
 // Displays a single Virtual Power Plant program as a card.
-// Used on the Compare page and the "Featured VPPs" section of the homepage.
+// Now supports optional incentive badges and mode-aware highlighting.
 //
 // Props:
-//   vpp — a VPP object containing all the program details
-//
-// Usage:
-//   <VPPCard vpp={myVppData} />
+//   vpp       — a VPP object containing all the program details
+//   mode      — (optional) 'have-battery' or 'buying-battery', affects display
 // =============================================================================
 
-import { VPP } from '@/types/vpp'
+import { VPP, OwnershipMode } from '@/types/vpp'
+import IncentiveBadges from './IncentiveBadges'
 import Button from '@/components/ui/Button'
 import Link from 'next/link'
 
 interface VPPCardProps {
   vpp: VPP
+  mode?: OwnershipMode  // Optional — Compare page and Map page don't pass this
 }
 
-export default function VPPCard({ vpp }: VPPCardProps) {
+export default function VPPCard({ vpp, mode }: VPPCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-slate-200">
 
@@ -35,10 +35,22 @@ export default function VPPCard({ vpp }: VPPCardProps) {
         {/* Description */}
         <p className="text-slate-600 text-sm">{vpp.description}</p>
 
-        {/* Feed-in Rate */}
+        {/* Incentive Badges (if incentive data is available) */}
+        {vpp.incentives && vpp.incentives.length > 0 && (
+          <IncentiveBadges incentives={vpp.incentives} showDetail />
+        )}
+
+        {/* Incentive Summary (fallback if no detailed incentives) */}
+        {vpp.incentive_summary && !vpp.incentives?.length && (
+          <p className="text-sm font-medium text-blue-700 bg-blue-50 rounded-md px-3 py-1.5">
+            {vpp.incentive_summary}
+          </p>
+        )}
+
+        {/* Feed-in Rate — emphasized in "have battery" mode */}
         <div className="flex items-center justify-between">
           <span className="text-slate-500 text-sm">Feed-in Rate</span>
-          <span className="text-lg font-bold text-emerald-600">
+          <span className={`text-lg font-bold ${mode === 'have-battery' ? 'text-emerald-600' : 'text-emerald-600'}`}>
             {vpp.feed_in_rate !== null ? `${vpp.feed_in_rate}c/kWh` : 'N/A'}
           </span>
         </div>
@@ -61,6 +73,11 @@ export default function VPPCard({ vpp }: VPPCardProps) {
           {vpp.battery_required && (
             <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
               Battery Required
+            </span>
+          )}
+          {vpp.program_model === 'install' && (
+            <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+              Battery Provided
             </span>
           )}
         </div>

@@ -69,3 +69,30 @@ export async function getVPPsByState(stateCode: string): Promise<VPP[]> {
 
   return data as VPP[]
 }
+
+/**
+ * Fetch all VPPs with their incentives and battery compatibility joined.
+ * Uses Supabase's nested select syntax to get related data in one query.
+ * Used on the homepage where we need incentive details and battery matches.
+ */
+export async function getAllVPPsWithIncentives(): Promise<VPP[]> {
+  const { data, error } = await supabase
+    .from('vpps')
+    .select(`
+      *,
+      incentives:vpp_incentives(*),
+      compatible_batteries:vpp_battery_compatibility(
+        *,
+        battery:batteries(*)
+      )
+    `)
+    .order('feed_in_rate', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching VPPs with incentives:', error.message)
+    // Fall back to basic VPP data if the join fails (tables might not exist yet)
+    return getAllVPPs()
+  }
+
+  return data as VPP[]
+}

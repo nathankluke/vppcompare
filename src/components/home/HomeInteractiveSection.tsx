@@ -1,58 +1,92 @@
 // =============================================================================
-// Home Interactive Section Component
+// Home Interactive Section Component (MAJOR UPDATE)
 // =============================================================================
-// This is the CLIENT WRAPPER that connects the filter form to the results.
-// It holds the shared UserSetup state and passes it to both children.
+// Client wrapper that connects the entire interactive form+results system.
 //
-// Why this exists:
-//   - The homepage (page.tsx) is a Server Component (fetches data from Supabase)
-//   - But the form + results need to share state (user's zip, battery, etc.)
-//   - So we create this client component that wraps them both
-//   - The server passes VPP data down as a prop
+// Now manages TWO PATHS via the OwnershipToggle:
+//   Path A ("I have a battery"):  HomeFilterForm → HomeVPPResults
+//   Path B ("Looking to buy"):    BuyerFilterForm → BuyerVPPResults
+//
+// Shared state (zip, solar) persists when switching paths.
 // =============================================================================
 
 'use client'
 
 import { useState } from 'react'
-import { VPP, UserSetup } from '@/types/vpp'
+import { VPP, UserSetup, OwnershipMode } from '@/types/vpp'
+import { Battery } from '@/types/battery'
+import OwnershipToggle from './OwnershipToggle'
 import HomeFilterForm from './HomeFilterForm'
 import HomeVPPResults from './HomeVPPResults'
+import BuyerFilterForm from './BuyerFilterForm'
+import BuyerVPPResults from './BuyerVPPResults'
 
 interface HomeInteractiveSectionProps {
-  vpps: VPP[]  // All VPPs from the database, passed from the server
+  vpps: VPP[]           // All VPPs (with incentives joined when available)
+  batteries: Battery[]  // All battery products
 }
 
-export default function HomeInteractiveSection({ vpps }: HomeInteractiveSectionProps) {
-  // The user's current form state — shared between form and results
+export default function HomeInteractiveSection({ vpps, batteries }: HomeInteractiveSectionProps) {
+  // Which path is the user on?
+  const [mode, setMode] = useState<OwnershipMode>('have-battery')
+
+  // User's form state — shared between both paths
   const [userSetup, setUserSetup] = useState<UserSetup>({
+    // Shared fields
     zip: '',
     state: '',
-    batteryBrand: 'Tesla Powerwall',
-    batteryCapacity: 13.5,
     hasSolar: false,
     solarSize: 6,
+    // Path A specific
+    batteryBrand: 'Tesla Powerwall',
+    batteryCapacity: 13.5,
+    // Path B specific
+    budgetMin: 5000,
+    budgetMax: 20000,
   })
 
   return (
     <section className="py-16 px-4 bg-slate-50">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left column: Filter form (takes up 4 columns on large screens) */}
-          <div className="lg:col-span-4">
-            <HomeFilterForm
-              setup={userSetup}
-              onSetupChange={setUserSetup}
-            />
-          </div>
+        {/* The big toggle: "I have a battery" vs "I'm looking to buy" */}
+        <OwnershipToggle mode={mode} onChange={setMode} />
 
-          {/* Right column: VPP results (takes up 8 columns on large screens) */}
-          <div className="lg:col-span-8">
-            <HomeVPPResults
-              vpps={vpps}
-              userSetup={userSetup}
-            />
+        {/* PATH A: I already have a battery */}
+        {mode === 'have-battery' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-4">
+              <HomeFilterForm
+                setup={userSetup}
+                onSetupChange={setUserSetup}
+              />
+            </div>
+            <div className="lg:col-span-8">
+              <HomeVPPResults
+                vpps={vpps}
+                userSetup={userSetup}
+              />
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* PATH B: I'm looking to buy a battery */}
+        {mode === 'buying-battery' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-4">
+              <BuyerFilterForm
+                setup={userSetup}
+                onSetupChange={setUserSetup}
+              />
+            </div>
+            <div className="lg:col-span-8">
+              <BuyerVPPResults
+                vpps={vpps}
+                batteries={batteries}
+                userSetup={userSetup}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )

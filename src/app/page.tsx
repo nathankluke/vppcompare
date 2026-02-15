@@ -2,41 +2,56 @@
 // Homepage — src/app/page.tsx
 // =============================================================================
 // The main landing page for VPPCompare. Structure:
-//   1. Hero — explains what a VPP is and how you earn money
-//   2. Interactive Section — zip code form + filtered VPP results
-//   3. How It Works — three simple steps
-//   4. FAQ — frequently asked questions accordion
+//   1. Hero — catchy headline + trust stats
+//   2. Why VPPs Matter — explains the importance (Octopus Energy-inspired)
+//   3. Ownership Toggle → Interactive form + filtered results (two paths)
+//   4. How It Works — three simple steps
+//   5. FAQ — frequently asked questions accordion
 //
-// This is a Server Component — fetches all VPPs from Supabase on the server,
-// then passes them to the interactive client component.
+// This is a Server Component — fetches all data from Supabase on the server,
+// then passes it to the interactive client components.
 // =============================================================================
 
 import HeroSection from '@/components/home/HeroSection'
+import WhyVPPSection from '@/components/home/WhyVPPSection'
 import HomeInteractiveSection from '@/components/home/HomeInteractiveSection'
 import FAQSection from '@/components/home/FAQSection'
-import { getAllVPPs } from '@/lib/getVPPs'
+import { getAllVPPsWithIncentives } from '@/lib/getVPPs'
+import { getAllBatteries } from '@/lib/getBatteries'
 
 // Fetch fresh data on every request (not cached at build time)
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  // Fetch all VPPs from Supabase (runs on the server)
-  const allVPPs = await getAllVPPs()
+  // Fetch all VPPs (with incentives + battery compatibility) and all batteries
+  const [allVPPs, allBatteries] = await Promise.all([
+    getAllVPPsWithIncentives(),
+    getAllBatteries(),
+  ])
+
+  // Count unique states for the hero trust stat
+  const stateSet = new Set<string>()
+  allVPPs.forEach((vpp) => vpp.states_available.forEach((s) => stateSet.add(s)))
 
   return (
     <div>
       {/* ================================================================
           SECTION 1: Hero
           ================================================================ */}
-      <HeroSection />
+      <HeroSection vppCount={allVPPs.length} stateCount={stateSet.size} />
 
       {/* ================================================================
-          SECTION 2: Interactive Form + Filtered VPP Results
+          SECTION 2: Why VPPs Matter
           ================================================================ */}
-      <HomeInteractiveSection vpps={allVPPs} />
+      <WhyVPPSection />
 
       {/* ================================================================
-          SECTION 3: How It Works
+          SECTION 3: Interactive Form + Filtered VPP Results (Two Paths)
+          ================================================================ */}
+      <HomeInteractiveSection vpps={allVPPs} batteries={allBatteries} />
+
+      {/* ================================================================
+          SECTION 4: How It Works
           ================================================================ */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
@@ -49,11 +64,11 @@ export default async function HomePage() {
             <div className="text-center p-6">
               <div className="text-5xl mb-4">🔍</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                1. Enter Your Details
+                1. Tell Us About Your Setup
               </h3>
               <p className="text-slate-500">
-                Tell us your zip code, battery type, and solar setup.
-                We&apos;ll find VPP programs available in your area.
+                Already have a battery? Enter your brand and zip code.
+                Looking to buy? Set your budget and we&apos;ll match you.
               </p>
             </div>
 
@@ -61,23 +76,23 @@ export default async function HomePage() {
             <div className="text-center p-6">
               <div className="text-5xl mb-4">⚖️</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                2. Compare Programs
+                2. Compare Programs &amp; Batteries
               </h3>
               <p className="text-slate-500">
-                See which VPPs are compatible with your setup. Compare signup
-                bonuses, earnings, and requirements side by side.
+                See VPP programs in your area with earnings estimates,
+                purchase rebates, and compatible battery recommendations.
               </p>
             </div>
 
             {/* Step 3 */}
             <div className="text-center p-6">
-              <div className="text-5xl mb-4">✅</div>
+              <div className="text-5xl mb-4">📊</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                3. Choose &amp; Earn
+                3. Calculate Your ROI
               </h3>
               <p className="text-slate-500">
-                Click through to the provider&apos;s website and sign up.
-                Start earning money from your home battery.
+                See exactly when your battery pays for itself. Most homeowners
+                stay 5–6 years — find a combo that works within your timeline.
               </p>
             </div>
           </div>
@@ -85,7 +100,7 @@ export default async function HomePage() {
       </section>
 
       {/* ================================================================
-          SECTION 4: FAQ
+          SECTION 5: FAQ
           ================================================================ */}
       <FAQSection />
     </div>

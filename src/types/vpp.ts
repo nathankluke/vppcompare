@@ -4,6 +4,9 @@
 // They ensure consistency between our frontend components and the database.
 // =============================================================================
 
+import { VPPIncentive } from './incentive'
+import { VPPBatteryCompatibility } from './battery'
+
 /**
  * VPP (Virtual Power Plant) — the main data type for the app.
  * Each VPP represents a program offered by an energy provider that allows
@@ -25,6 +28,16 @@ export interface VPP {
   logo_url: string | null;               // URL to the provider's logo image
   created_at: string;                     // ISO timestamp of when the record was created
   updated_at: string;                     // ISO timestamp of the last update
+
+  // --- New fields for incentive separation ---
+  has_purchase_incentive: boolean;        // Does this VPP offer rebates for buying a battery?
+  has_ongoing_incentive: boolean;         // Does this VPP offer ongoing VPP participation payments?
+  incentive_summary: string | null;       // Quick summary like "Up to $5,000 rebate + $100/yr"
+  program_model: 'standard' | 'lease' | 'install'; // How the battery is obtained
+
+  // --- Optional joined data (populated by nested Supabase selects) ---
+  incentives?: VPPIncentive[];                        // All incentives for this VPP
+  compatible_batteries?: VPPBatteryCompatibility[];   // Battery compatibility data
 }
 
 /**
@@ -38,14 +51,28 @@ export interface VPPComparison {
 }
 
 /**
+ * OwnershipMode — the two paths on the homepage.
+ * Controls which form and results view the user sees.
+ */
+export type OwnershipMode = 'have-battery' | 'buying-battery'
+
+/**
  * UserSetup — tracks what the user enters in the homepage filter form.
  * Used to match VPPs to the user's home battery and solar setup.
+ * Supports both paths (have battery vs. buying battery).
  */
 export interface UserSetup {
+  // --- Shared fields (both paths) ---
   zip: string;                            // 5-digit US zip code
   state: string;                          // 2-letter state code resolved from zip
-  batteryBrand: string;                   // e.g. "Tesla Powerwall", "Enphase", "None"
-  batteryCapacity: number;                // kWh (5-50)
   hasSolar: boolean;                      // Does the user have solar panels?
   solarSize: number;                      // kW (1-20), only relevant if hasSolar
+
+  // --- Path A: "I already have a battery" ---
+  batteryBrand: string;                   // e.g. "Tesla Powerwall", "Enphase", "None"
+  batteryCapacity: number;                // kWh (5-50)
+
+  // --- Path B: "I'm looking to buy a battery" ---
+  budgetMin: number;                      // Minimum budget in USD
+  budgetMax: number;                      // Maximum budget in USD
 }

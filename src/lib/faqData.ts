@@ -51,4 +51,24 @@ export const faqItems: FAQItem[] = [
     answer:
       'VPP programs are expanding rapidly across the US. Currently, states like California, Texas, Colorado, Connecticut, Massachusetts, Rhode Island, New Hampshire, Vermont, and others have active programs. Use our US Map page to see which programs are available in your state.',
   },
+  {
+    question: 'What is the best home battery to buy for a VPP?',
+    answer:
+      'The best battery depends on your budget and which VPP programs are available in your state. Popular choices include the Tesla Powerwall 3 (13.5 kWh, ~$15,400 installed), Enphase IQ 5P (5 kWh, ~$7,500), Enphase IQ 10T (10 kWh, ~$10,000), and Sonnen Core+ (10 kWh, ~$16,000). Use our "Looking to Buy" path above to see which batteries work with VPP programs in your area and compare prices.',
+  },
+  {
+    question: 'What is the 30% Federal ITC tax credit for batteries?',
+    answer:
+      'The Investment Tax Credit (ITC) under the Inflation Reduction Act lets you claim 30% of your battery installation cost as a federal tax credit. For example, a $15,000 battery would qualify for a $4,500 credit. The battery must be installed at your home and can be paired with or without solar panels. This credit significantly reduces your payback period when combined with VPP earnings.',
+  },
+  {
+    question: 'How fast will a home battery pay for itself?',
+    answer:
+      'Payback periods vary widely depending on the battery cost, available incentives, and VPP earnings. With generous programs like ConnectedSolutions (~$1,500/year) plus the 30% ITC credit, a battery can pay for itself in 3–5 years. With lower-earning programs, it may take longer. Since the average homeowner stays 5–6 years, choosing the right VPP + battery combo is key. Use our ROI calculator to see your specific payback timeline.',
+  },
+  {
+    question: 'What is the difference between purchase incentives and ongoing VPP earnings?',
+    answer:
+      'Purchase incentives are one-time benefits you receive when buying a new battery — like Xcel Energy\'s $5,000 rebate or ConnectedSolutions\' 0% financing. Ongoing VPP earnings are recurring payments you receive for participating in the program, such as feed-in rates (cents per kWh), monthly payments, or seasonal bonuses. The best deals often combine both: a large upfront rebate to lower your cost, plus ongoing earnings to reach payback faster.',
+  },
 ]

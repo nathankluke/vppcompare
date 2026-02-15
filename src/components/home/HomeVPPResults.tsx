@@ -132,7 +132,7 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
           return (
             <div key={vpp.id}>
               <VPPMatchBadge status={compat.status} reasons={compat.reasons} />
-              <VPPCard vpp={vpp} />
+              <VPPCard vpp={vpp} mode="have-battery" />
             </div>
           )
         })}
