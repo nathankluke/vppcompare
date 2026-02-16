@@ -25,161 +25,130 @@ export default function TermsPage() {
         {/* ---- Main Content ---- */}
         <div className="bg-white rounded-xl shadow-md border border-slate-200 p-8 space-y-6 text-slate-600 leading-relaxed">
 
+          <p>
+            By using this website, you agree to the following Terms of Service.
+          </p>
+
+          {/* 1 */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Acceptance of Terms
+              1. Informational Purposes Only
             </h2>
             <p>
-              By accessing and using vppcompare.com (the &quot;Site&quot;), you agree
-              to be bound by these Terms of Service. If you do not agree to these
-              terms, please do not use the Site. VPPcompare LLC (&quot;VPPcompare,&quot;
-              &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) reserves the right to
-              update these terms at any time.
+              VPPcompare LLC provides research, comparisons, and earnings estimates
+              related to home battery systems and Virtual Power Plant programs.
+            </p>
+            <p className="mt-3 mb-2">We do not provide:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Financial advice</li>
+              <li>Investment advice</li>
+              <li>Tax advice</li>
+              <li>Legal advice</li>
+              <li>Utility services</li>
+              <li>Installation services</li>
+            </ul>
+            <p className="mt-3">
+              Any projections shown on this site are estimates based on available
+              data and assumptions. Actual results may vary significantly.
             </p>
           </section>
 
+          {/* 2 */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Informational Purposes Only
+              2. No Guarantee of Earnings
+            </h2>
+            <p className="mb-2">
+              Participation in a Virtual Power Plant program depends on many factors,
+              including:
+            </p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Utility rules</li>
+              <li>Regulatory changes</li>
+              <li>Grid demand</li>
+              <li>Weather conditions</li>
+              <li>Equipment performance</li>
+              <li>Provider policies</li>
+            </ul>
+            <p className="mt-3">
+              We make no guarantees regarding financial returns or performance.
+            </p>
+          </section>
+
+          {/* 3 */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-800 mb-3">
+              3. Affiliate &amp; Referral Relationships (FTC Disclosure)
             </h2>
             <p>
-              The information provided on VPPcompare is for general informational
-              and educational purposes only. VPPcompare is <strong>not</strong> a
-              utility company, energy retailer, financial advisor, or licensed
-              professional of any kind.
+              VPPcompare LLC participates in referral and affiliate partnerships
+              with certain battery manufacturers, installers, and Virtual Power
+              Plant providers.
             </p>
             <p className="mt-3">
-              We do our best to keep VPP program information accurate and up to date,
-              but we make <strong>no guarantee</strong> regarding the accuracy,
-              completeness, or timeliness of any information on the Site. VPP program
-              terms, incentives, availability, and requirements are set by each
-              provider and can change at any time without notice.
+              If you choose to engage with a provider through our site, we may
+              receive compensation.
             </p>
             <p className="mt-3">
-              Always verify program details, incentives, and eligibility directly
-              with the VPP provider before making any decisions.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Not Financial or Legal Advice
-            </h2>
-            <p>
-              Nothing on this Site constitutes financial, investment, tax, or legal
-              advice. ROI estimates, payback calculations, and earnings projections
-              are approximations based on publicly available program data and should
-              not be relied upon as guarantees. Consult with qualified professionals
-              before making financial decisions related to home batteries or energy
-              programs.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Affiliate &amp; Referral Disclosure
-            </h2>
-            <p>
-              VPPcompare may earn referral fees or commissions when you click on links
-              to VPP providers or battery products and take qualifying actions (such
-              as signing up for a program or making a purchase). This does not affect
-              the price you pay.
+              This compensation does not affect our rankings, scoring models, or
+              calculations.
             </p>
             <p className="mt-3">
-              For more details, see our{' '}
-              <Link
-                href="/revenue-disclosure"
-                className="text-blue-700 underline hover:text-blue-900"
-              >
-                Revenue Disclosure
-              </Link>{' '}
-              page. Referral relationships do not influence our rankings or
-              recommendations.
+              We are committed to transparency and strive to provide the most
+              accurate and up-to-date information available.
             </p>
           </section>
 
+          {/* 4 */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Intellectual Property
+              4. User Responsibilities
+            </h2>
+            <p className="mb-2">You agree to:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Provide accurate information</li>
+              <li>Use the website lawfully</li>
+              <li>Not attempt to interfere with the site&apos;s operation</li>
+            </ul>
+          </section>
+
+          {/* 5 */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-800 mb-3">
+              5. Intellectual Property
             </h2>
             <p>
-              All content on VPPcompare — including text, design, logos, graphics,
-              data compilations, and software — is the property of VPPcompare LLC
-              or its content suppliers and is protected by applicable intellectual
-              property laws. You may not reproduce, distribute, modify, or create
-              derivative works from our content without prior written permission.
+              All content, models, calculations, and designs are owned by
+              VPPcompare LLC and may not be copied or reproduced without permission.
             </p>
           </section>
 
+          {/* 6 */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Third-Party Links
+              6. Limitation of Liability
             </h2>
-            <p>
-              The Site contains links to third-party websites, including VPP providers
-              and battery manufacturers. We are not responsible for the content,
-              accuracy, or practices of those sites. Clicking on a third-party link
-              means you are leaving VPPcompare, and we encourage you to review the
-              terms and privacy policies of any site you visit.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Limitation of Liability
-            </h2>
-            <p>
+            <p className="mb-2">
               To the fullest extent permitted by law, VPPcompare LLC shall not be
-              liable for any direct, indirect, incidental, consequential, or punitive
-              damages arising from your use of, or inability to use, the Site or any
-              information provided on it. This includes, without limitation, damages
-              arising from decisions made based on information found on VPPcompare.
+              liable for:
             </p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Indirect or consequential damages</li>
+              <li>Financial losses</li>
+              <li>Decisions made based on site information</li>
+            </ul>
             <p className="mt-3">
-              VPPcompare is provided &quot;as is&quot; and &quot;as available&quot;
-              without warranties of any kind, whether express or implied.
+              Use of the site is at your own risk.
             </p>
           </section>
 
+          {/* 7 */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              User Conduct
+              7. Governing Law
             </h2>
             <p>
-              You agree not to use the Site for any unlawful purpose or in any way
-              that could damage, disable, or impair the Site. Automated scraping,
-              data harvesting, or unauthorized access to our systems is prohibited.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Governing Law
-            </h2>
-            <p>
-              These Terms of Service are governed by and construed in accordance with
-              the laws of the State of Colorado, without regard to its conflict of law
-              principles. Any disputes arising from these terms or your use of the Site
-              shall be resolved in the courts of the State of Colorado.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Contact Us
-            </h2>
-            <p>
-              If you have questions about these Terms of Service, please contact us at{' '}
-              <a
-                href="mailto:info@vppcompare.com"
-                className="text-blue-700 underline hover:text-blue-900"
-              >
-                info@vppcompare.com
-              </a>
-              .
-            </p>
-            <p className="mt-2 text-sm text-slate-400">
-              VPPcompare LLC — Colorado, USA
+              These Terms are governed by the laws of the State of Colorado.
             </p>
           </section>
         </div>

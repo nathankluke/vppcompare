@@ -15,73 +15,54 @@ export default function RevenueDisclosurePage() {
         {/* ---- Page Heading ---- */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-800 mb-4">
-            Revenue Disclosure
+            How VPPcompare Makes Money
           </h1>
-          <p className="text-lg text-slate-500">
-            How VPPcompare earns revenue — and what that means for you.
-          </p>
         </div>
 
         {/* ---- Main Content ---- */}
         <div className="bg-white rounded-xl shadow-md border border-slate-200 p-8 space-y-6 text-slate-600 leading-relaxed">
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              We Are Ad-Free
-            </h2>
-            <p>
-              VPPcompare does not display ads. We believe ads create clutter and can
-              introduce bias into comparison tools. You will never see banner ads,
-              pop-ups, or sponsored content on our site.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              How We Earn Revenue
-            </h2>
-            <p>
-              VPPcompare may earn revenue through referral relationships with
-              select VPP providers, battery manufacturers, and solar installers.
-              When you click on a link to a provider&apos;s website and take a
-              qualifying action (such as signing up for a program or requesting a
-              quote), we may receive a referral fee or commission.
+            <p className="text-lg font-semibold text-slate-800">
+              VPPcompare is ad-free.
             </p>
             <p className="mt-3">
-              This referral fee is paid by the provider, <strong>not by you</strong>.
-              It does not increase the price you pay or reduce the incentives you
-              receive.
+              We do not sell banner ads or sponsored placements.
+            </p>
+            <p className="mt-3">
+              Instead, we are funded through referral relationships with certain
+              battery providers, installers, and Virtual Power Plant operators. If
+              you choose to move forward with a provider through our platform, we
+              may receive compensation.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Does This Affect Our Rankings?
-            </h2>
+            <p className="mb-2">That compensation allows us to:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Keep the site free to use</li>
+              <li>Continue improving our comparison tools</li>
+              <li>Invest time into researching program terms and regulatory updates</li>
+            </ul>
+          </section>
+
+          <section>
             <p>
-              <strong>No.</strong> Referral relationships do not influence how we rank,
-              sort, or recommend VPP programs. Our comparison tools are based on
-              publicly available program data including incentives, feed-in rates,
-              battery compatibility, and availability. Programs that do not have a
-              referral relationship with us are still listed and compared equally.
+              We work hard to present accurate, transparent comparisons based on
+              publicly available information, provider documentation, and direct
+              communications.
+            </p>
+            <p className="mt-3">
+              However, energy markets change, program rules evolve, and incentives
+              shift. While we strive to keep information current, we encourage users
+              to confirm final terms directly with providers before making decisions.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Our Commitment to Transparency
-            </h2>
-            <p>
-              We believe in being upfront about how we make money. If you have any
-              questions about our revenue model or want to know whether a specific
-              listing involves a referral relationship, please contact us at{' '}
-              <a
-                href="mailto:info@vppcompare.com"
-                className="text-blue-700 underline hover:text-blue-900"
-              >
-                info@vppcompare.com
-              </a>
-              .
+            <p className="font-semibold text-slate-700">
+              Our mission is to help homeowners make informed, financially sound
+              choices — while supporting a more resilient grid.
             </p>
           </section>
         </div>
