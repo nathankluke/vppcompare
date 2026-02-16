@@ -77,6 +77,9 @@ ALTER TABLE vpps ADD COLUMN IF NOT EXISTS has_purchase_incentive BOOLEAN DEFAULT
 ALTER TABLE vpps ADD COLUMN IF NOT EXISTS has_ongoing_incentive BOOLEAN DEFAULT false;
 ALTER TABLE vpps ADD COLUMN IF NOT EXISTS incentive_summary TEXT;
 ALTER TABLE vpps ADD COLUMN IF NOT EXISTS program_model TEXT DEFAULT 'standard';
+ALTER TABLE vpps ADD COLUMN IF NOT EXISTS buyer_only BOOLEAN DEFAULT false;
+ALTER TABLE vpps ADD COLUMN IF NOT EXISTS flexibility_rating TEXT DEFAULT 'medium';
+ALTER TABLE vpps ADD COLUMN IF NOT EXISTS flexibility_details TEXT;
 
 -- =============================================
 -- STEP 5: Insert battery products

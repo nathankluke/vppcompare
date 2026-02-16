@@ -17,6 +17,7 @@
 
 import { VPP, OwnershipMode } from '@/types/vpp'
 import IncentiveBadges from './IncentiveBadges'
+import FlexibilityRating from './FlexibilityRating'
 import Button from '@/components/ui/Button'
 import Link from 'next/link'
 
@@ -117,8 +118,8 @@ export default function VPPCard({ vpp, mode, isQualified, disqualificationReason
           </div>
         )}
 
-        {/* Requirements */}
-        <div className="flex gap-3 text-xs flex-wrap">
+        {/* Requirements + Flexibility */}
+        <div className="flex gap-3 text-xs flex-wrap items-center">
           {vpp.solar_required && (
             <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
               Solar Required
@@ -133,6 +134,12 @@ export default function VPPCard({ vpp, mode, isQualified, disqualificationReason
             <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
               Battery Provided
             </span>
+          )}
+          {vpp.flexibility_rating && (
+            <FlexibilityRating
+              rating={vpp.flexibility_rating}
+              details={vpp.flexibility_details}
+            />
           )}
         </div>
 

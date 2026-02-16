@@ -35,6 +35,13 @@ export interface VPP {
   incentive_summary: string | null;       // Quick summary like "Up to $5,000 rebate + $100/yr"
   program_model: 'standard' | 'lease' | 'install'; // How the battery is obtained
 
+  // --- Buyer-only flag ---
+  buyer_only: boolean;                    // Only show in "I Need a Battery" path (e.g., Xcel RBC requires new install)
+
+  // --- Flexibility rating ---
+  flexibility_rating: 'low' | 'medium' | 'high'; // How much control users have over participation
+  flexibility_details: string | null;     // Tooltip text explaining the rating for this program
+
   // --- Optional joined data (populated by nested Supabase selects) ---
   incentives?: VPPIncentive[];                        // All incentives for this VPP
   compatible_batteries?: VPPBatteryCompatibility[];   // Battery compatibility data

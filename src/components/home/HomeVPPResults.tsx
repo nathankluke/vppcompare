@@ -72,6 +72,9 @@ function getCompatibility(vpp: VPP, setup: UserSetup): {
 }
 
 export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps) {
+  // Filter out buyer-only programs (like Xcel RBC which requires new install)
+  const ownerVPPs = vpps.filter((vpp) => !vpp.buyer_only)
+
   // If no zip entered, show all VPPs with a prompt
   if (!userSetup.state) {
     return (
@@ -80,13 +83,13 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
           Enter your zip code to see programs in your area and check compatibility.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {vpps.slice(0, 6).map((vpp) => (
+          {ownerVPPs.slice(0, 6).map((vpp) => (
             <VPPCard key={vpp.id} vpp={vpp} />
           ))}
         </div>
-        {vpps.length > 6 && (
+        {ownerVPPs.length > 6 && (
           <p className="text-center text-sm text-slate-400 mt-4">
-            + {vpps.length - 6} more programs.{' '}
+            + {ownerVPPs.length - 6} more programs.{' '}
             <a href="/compare" className="text-blue-700 underline">
               View all →
             </a>
@@ -96,8 +99,8 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
     )
   }
 
-  // Filter VPPs by state
-  const stateVPPs = vpps.filter((vpp) =>
+  // Filter VPPs by state (excluding buyer-only programs)
+  const stateVPPs = ownerVPPs.filter((vpp) =>
     vpp.states_available.includes(userSetup.state)
   )
 

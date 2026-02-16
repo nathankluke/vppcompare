@@ -21,6 +21,7 @@ import { BATTERY_SIZE_RANGES } from '@/lib/batterySizeRanges'
 import VPPCard from '@/components/vpp/VPPCard'
 import BatteryPartnerCard from '@/components/vpp/BatteryPartnerCard'
 import IncentiveBadges from '@/components/vpp/IncentiveBadges'
+import FlexibilityRating from '@/components/vpp/FlexibilityRating'
 import ROICalculator from './ROICalculator'
 
 interface BuyerVPPResultsProps {
@@ -206,9 +207,17 @@ function VPPWithBatteries({
           <IncentiveBadges incentives={vpp.incentives} showDetail />
         </div>
         <p className="text-sm text-slate-600 mt-2">{vpp.description}</p>
-        {vpp.incentive_summary && (
-          <p className="text-sm font-medium text-blue-700 mt-1">{vpp.incentive_summary}</p>
-        )}
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
+          {vpp.incentive_summary && (
+            <p className="text-sm font-medium text-blue-700">{vpp.incentive_summary}</p>
+          )}
+          {vpp.flexibility_rating && (
+            <FlexibilityRating
+              rating={vpp.flexibility_rating}
+              details={vpp.flexibility_details}
+            />
+          )}
+        </div>
       </div>
 
       {/* Compatible Batteries Section */}
