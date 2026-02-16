@@ -68,7 +68,7 @@ export default async function HomePage() {
               </h3>
               <p className="text-slate-500">
                 Already have a battery? Enter your brand and zip code.
-                Looking to buy? Set your budget and we&apos;ll match you.
+                Looking to buy? Pick your storage capacity and we&apos;ll match you.
               </p>
             </div>
 
