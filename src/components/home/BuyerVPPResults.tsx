@@ -43,15 +43,21 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
     ? batteries.filter((b) => b.capacity_kwh >= sizeRange.minKwh && b.capacity_kwh <= sizeRange.maxKwh)
     : batteries
 
-  // If no zip entered, show info prompt
+  // If no zip entered, show all VPPs (purchase incentive programs first)
   if (!userSetup.state) {
+    const previewVPPs = [...vpps].sort((a, b) => {
+      if (a.has_purchase_incentive && !b.has_purchase_incentive) return -1
+      if (!a.has_purchase_incentive && b.has_purchase_incentive) return 1
+      return (b.feed_in_rate ?? 0) - (a.feed_in_rate ?? 0)
+    })
+
     return (
       <div>
         <p className="text-slate-500 text-sm mb-6 text-center">
           Enter your zip code to see VPP programs and battery recommendations in your area.
         </p>
-        <div className="grid grid-cols-1 gap-6">
-          {vpps.filter((v) => v.has_purchase_incentive).slice(0, 3).map((vpp) => (
+        <div className="space-y-8">
+          {previewVPPs.map((vpp) => (
             <VPPWithBatteries
               key={vpp.id}
               vpp={vpp}
