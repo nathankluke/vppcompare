@@ -26,13 +26,30 @@ interface VPPCardProps {
   mode?: OwnershipMode
   isQualified?: boolean
   disqualificationReasons?: string[]
+  batteryCapacityKwh?: number   // User's battery capacity for scaling earnings
 }
 
-export default function VPPCard({ vpp, mode, isQualified, disqualificationReasons }: VPPCardProps) {
-  // Calculate monthly earnings from ongoing incentives
+// Default battery capacity the estimated_annual_value was based on (13.5 kWh ≈ Tesla Powerwall)
+const DEFAULT_BATTERY_KWH = 13.5
+
+export default function VPPCard({ vpp, mode, isQualified, disqualificationReasons, batteryCapacityKwh }: VPPCardProps) {
+  // Calculate annual earnings, scaling by battery capacity when rate info is available
   const annualEarnings = vpp.incentives
     ?.filter((i) => i.incentive_type === 'ongoing')
-    .reduce((sum, i) => sum + (i.estimated_annual_value ?? 0), 0) ?? 0
+    .reduce((sum, i) => {
+      // If we have rate info ($/kW) and user capacity, calculate from the rate
+      if (i.amount_rate && i.rate_unit === '$/kW' && batteryCapacityKwh) {
+        return sum + (i.amount_rate * batteryCapacityKwh)
+      }
+      // If we have an estimated annual value and user capacity, scale proportionally
+      // (original estimates were based on ~13.5 kWh / Tesla Powerwall)
+      if (i.estimated_annual_value && batteryCapacityKwh) {
+        const scale = batteryCapacityKwh / DEFAULT_BATTERY_KWH
+        return sum + Math.round(i.estimated_annual_value * scale)
+      }
+      // Fallback: use the static estimate
+      return sum + (i.estimated_annual_value ?? 0)
+    }, 0) ?? 0
   const monthlyEarnings = Math.round(annualEarnings / 12)
   const fiveYearTotal = annualEarnings * 5
 
@@ -87,7 +104,14 @@ export default function VPPCard({ vpp, mode, isQualified, disqualificationReason
         {/* Monthly Earnings Estimate */}
         {monthlyEarnings > 0 && (
           <div className="flex items-center justify-between">
-            <span className="text-slate-500 text-sm">Est. Monthly Earnings</span>
+            <span className="text-slate-500 text-sm">
+              Est. Monthly Earnings
+              {batteryCapacityKwh && (
+                <span className="text-xs text-slate-400 block">
+                  based on {batteryCapacityKwh} kWh
+                </span>
+              )}
+            </span>
             <span className="text-lg font-bold text-emerald-600">
               ~${monthlyEarnings}/mo
             </span>

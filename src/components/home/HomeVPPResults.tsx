@@ -85,7 +85,7 @@ export default function HomeVPPResults({ vpps, userSetup, onSwitchToBuyer }: Hom
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {ownerVPPs.slice(0, 6).map((vpp) => (
-            <VPPCard key={vpp.id} vpp={vpp} />
+            <VPPCard key={vpp.id} vpp={vpp} batteryCapacityKwh={userSetup.batteryCapacity} />
           ))}
         </div>
         {ownerVPPs.length > 6 && (
@@ -184,6 +184,7 @@ export default function HomeVPPResults({ vpps, userSetup, onSwitchToBuyer }: Hom
                 mode="have-battery"
                 isQualified={isQualified}
                 disqualificationReasons={compat.status === 'incompatible' ? compat.reasons : undefined}
+                batteryCapacityKwh={userSetup.batteryCapacity}
               />
             </div>
           )
