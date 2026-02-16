@@ -86,8 +86,14 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
     )
   }
 
-  // Sort: VPPs with purchase incentives first, then by estimated value
+  // Sort: qualified first, then purchase incentives, then by feed-in rate
   const sortedVPPs = [...stateVPPs].sort((a, b) => {
+    // Grayed out (unqualified) cards go last
+    const aQualified = !a.solar_required || userSetup.hasSolar
+    const bQualified = !b.solar_required || userSetup.hasSolar
+    if (aQualified && !bQualified) return -1
+    if (!aQualified && bQualified) return 1
+    // Then sort by purchase incentives
     if (a.has_purchase_incentive && !b.has_purchase_incentive) return -1
     if (!a.has_purchase_incentive && b.has_purchase_incentive) return 1
     return (b.feed_in_rate ?? 0) - (a.feed_in_rate ?? 0)
