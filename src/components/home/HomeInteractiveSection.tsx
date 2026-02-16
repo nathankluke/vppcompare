@@ -65,6 +65,7 @@ export default function HomeInteractiveSection({ vpps, batteries }: HomeInteract
               <HomeVPPResults
                 vpps={vpps}
                 userSetup={userSetup}
+                onSwitchToBuyer={() => setMode('buying-battery')}
               />
             </div>
           </div>

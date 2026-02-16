@@ -20,6 +20,7 @@ import VPPMatchBadge from '@/components/vpp/VPPMatchBadge'
 interface HomeVPPResultsProps {
   vpps: VPP[]
   userSetup: UserSetup
+  onSwitchToBuyer?: () => void
 }
 
 // Figure out how compatible a VPP is with the user's setup
@@ -71,7 +72,7 @@ function getCompatibility(vpp: VPP, setup: UserSetup): {
   }
 }
 
-export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps) {
+export default function HomeVPPResults({ vpps, userSetup, onSwitchToBuyer }: HomeVPPResultsProps) {
   // Filter out buyer-only programs (like Xcel RBC which requires new install)
   const ownerVPPs = vpps.filter((vpp) => !vpp.buyer_only)
 
@@ -104,22 +105,56 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
     vpp.states_available.includes(userSetup.state)
   )
 
-  // No VPPs in this state
+  // No VPPs in this state for existing battery owners
   if (stateVPPs.length === 0) {
     const stateName = getStateName(userSetup.state)
+
+    // Check if there are buyer-only programs available for this state
+    const buyerOnlyVPPs = vpps.filter(
+      (vpp) => vpp.buyer_only && vpp.states_available.includes(userSetup.state)
+    )
+    const hasBuyerPrograms = buyerOnlyVPPs.length > 0
+
     return (
       <div className="text-center py-12">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl font-bold">--</div>
         <h3 className="text-xl font-bold text-slate-700 mb-2">
-          VPP programs haven&apos;t reached {stateName} yet
+          No VPP programs for existing battery owners in {stateName}
+          {hasBuyerPrograms && ' — but options are available for new systems'}
         </h3>
         <p className="text-slate-500 max-w-md mx-auto">
-          Virtual Power Plants are expanding fast across the US.
-          Check back soon for updates in your area!
+          {hasBuyerPrograms ? (
+            <>
+              There {buyerOnlyVPPs.length === 1 ? 'is' : 'are'}{' '}
+              <strong>{buyerOnlyVPPs.length}</strong> VPP{' '}
+              {buyerOnlyVPPs.length === 1 ? 'program' : 'programs'} in{' '}
+              {stateName} for customers installing a new battery system.{' '}
+              {onSwitchToBuyer ? (
+                <button
+                  onClick={onSwitchToBuyer}
+                  className="text-blue-700 underline font-medium hover:text-blue-800 cursor-pointer"
+                >
+                  Browse new battery options →
+                </button>
+              ) : (
+                <span>Switch to &quot;I Need a Battery&quot; above to see them.</span>
+              )}
+            </>
+          ) : (
+            <>
+              Virtual Power Plants are expanding fast across the US.
+              Check back soon for updates in your area!
+            </>
+          )}
         </p>
       </div>
     )
   }
+
+  // Check if there are also buyer-only programs in this state
+  const buyerOnlyInState = vpps.filter(
+    (vpp) => vpp.buyer_only && vpp.states_available.includes(userSetup.state)
+  )
 
   // Sort: qualified programs first, then by compatibility
   const stateName = getStateName(userSetup.state)
@@ -154,6 +189,26 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
           )
         })}
       </div>
+
+      {/* Note about additional buyer-only programs */}
+      {buyerOnlyInState.length > 0 && (
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+          <p className="text-sm text-blue-800">
+            <strong>{buyerOnlyInState.length} additional VPP {buyerOnlyInState.length === 1 ? 'program is' : 'programs are'}</strong>{' '}
+            available in {stateName} for customers installing a new battery system.{' '}
+            {onSwitchToBuyer ? (
+              <button
+                onClick={onSwitchToBuyer}
+                className="text-blue-700 underline font-medium hover:text-blue-800 cursor-pointer"
+              >
+                Browse new battery options →
+              </button>
+            ) : (
+              <span>Switch to &quot;I Need a Battery&quot; above to see them.</span>
+            )}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

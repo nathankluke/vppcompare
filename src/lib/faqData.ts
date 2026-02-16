@@ -71,4 +71,9 @@ export const faqItems: FAQItem[] = [
     answer:
       'Purchase incentives are one-time benefits you receive when buying a new battery — like Xcel Energy\'s $5,000 rebate or ConnectedSolutions\' 0% financing. Ongoing VPP earnings are recurring payments you receive for participating in the program, such as feed-in rates (cents per kWh), monthly payments, or seasonal bonuses. The best deals often combine both: a large upfront rebate to lower your cost, plus ongoing earnings to reach payback faster.',
   },
+  {
+    question: 'What is interconnection and why do I need it for my solar or battery system?',
+    answer:
+      'Interconnection is the process of officially connecting your solar panels or battery system to the local utility grid. It involves two main steps: getting Permission to Install (your installer submits engineering plans and documentation to the utility for approval) and Permission to Operate, or PTO (the utility verifies the installation, programs your meter, and gives you the green light to generate and export power). Interconnection is required because the grid is a carefully balanced system — your utility needs to confirm your equipment is safe, won\'t overload the grid, and meets local electrical codes. It also enables net metering so you can earn credits for excess energy. The process typically takes 3–6 weeks and costs $0–$200 (often included in your install price). Details vary by state and utility, so your installer will handle the paperwork. Systems connected without proper utility approval can be immediately disabled. If you\'re joining a VPP program that requires a new battery installation, interconnection is part of the setup process.',
+  },
 ]
