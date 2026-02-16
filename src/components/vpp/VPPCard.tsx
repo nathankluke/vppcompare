@@ -2,11 +2,17 @@
 // VPPCard Component (Updated)
 // =============================================================================
 // Displays a single Virtual Power Plant program as a card.
-// Now supports optional incentive badges and mode-aware highlighting.
+// Now supports:
+//   - Incentive badges and mode-aware highlighting
+//   - Monthly earnings display (below feed-in rate)
+//   - 5-year earnings bar
+//   - Qualification state (gray/opaque when not eligible)
 //
 // Props:
-//   vpp       — a VPP object containing all the program details
-//   mode      — (optional) 'have-battery' or 'buying-battery', affects display
+//   vpp                      — a VPP object containing all the program details
+//   mode                     — (optional) 'have-battery' or 'buying-battery'
+//   isQualified              — (optional) false = gray out the card
+//   disqualificationReasons  — (optional) why they don't qualify
 // =============================================================================
 
 import { VPP, OwnershipMode } from '@/types/vpp'
@@ -16,12 +22,34 @@ import Link from 'next/link'
 
 interface VPPCardProps {
   vpp: VPP
-  mode?: OwnershipMode  // Optional — Compare page and Map page don't pass this
+  mode?: OwnershipMode
+  isQualified?: boolean
+  disqualificationReasons?: string[]
 }
 
-export default function VPPCard({ vpp, mode }: VPPCardProps) {
+export default function VPPCard({ vpp, mode, isQualified, disqualificationReasons }: VPPCardProps) {
+  // Calculate monthly earnings from ongoing incentives
+  const annualEarnings = vpp.incentives
+    ?.filter((i) => i.incentive_type === 'ongoing')
+    .reduce((sum, i) => sum + (i.estimated_annual_value ?? 0), 0) ?? 0
+  const monthlyEarnings = Math.round(annualEarnings / 12)
+  const fiveYearTotal = annualEarnings * 5
+
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-slate-200">
+    <div className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-slate-200
+      ${isQualified === false ? 'opacity-60 grayscale' : ''}`}>
+
+      {/* Disqualification banner */}
+      {isQualified === false && disqualificationReasons && disqualificationReasons.length > 0 && (
+        <div className="bg-slate-100 border-b border-slate-300 px-6 py-3">
+          <p className="text-sm font-semibold text-slate-500">Not currently eligible</p>
+          <ul className="text-xs text-slate-400 mt-1">
+            {disqualificationReasons.map((reason, i) => (
+              <li key={i}>- {reason}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* ---- Card Header: Provider + VPP Name ---- */}
       <div className="bg-blue-800 text-white px-6 py-4">
@@ -47,13 +75,23 @@ export default function VPPCard({ vpp, mode }: VPPCardProps) {
           </p>
         )}
 
-        {/* Feed-in Rate — emphasized in "have battery" mode */}
+        {/* Feed-in Rate */}
         <div className="flex items-center justify-between">
           <span className="text-slate-500 text-sm">Feed-in Rate</span>
-          <span className={`text-lg font-bold ${mode === 'have-battery' ? 'text-emerald-600' : 'text-emerald-600'}`}>
+          <span className="text-lg font-bold text-emerald-600">
             {vpp.feed_in_rate !== null ? `${vpp.feed_in_rate}c/kWh` : 'N/A'}
           </span>
         </div>
+
+        {/* Monthly Earnings Estimate */}
+        {monthlyEarnings > 0 && (
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 text-sm">Est. Monthly Earnings</span>
+            <span className="text-lg font-bold text-emerald-600">
+              ~${monthlyEarnings}/mo
+            </span>
+          </div>
+        )}
 
         {/* Signup Bonus */}
         <div className="flex items-center justify-between">
@@ -63,8 +101,24 @@ export default function VPPCard({ vpp, mode }: VPPCardProps) {
           </span>
         </div>
 
+        {/* 5-Year Earnings Bar */}
+        {fiveYearTotal > 0 && (
+          <div>
+            <div className="flex justify-between text-xs text-slate-500 mb-1">
+              <span>5-Year Earnings Estimate</span>
+              <span className="font-bold text-emerald-600">${fiveYearTotal.toLocaleString()}</span>
+            </div>
+            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 rounded-full"
+                style={{ width: `${Math.min((fiveYearTotal / 7500) * 100, 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Requirements */}
-        <div className="flex gap-3 text-xs">
+        <div className="flex gap-3 text-xs flex-wrap">
           {vpp.solar_required && (
             <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
               Solar Required

@@ -28,7 +28,7 @@ export default function IncentiveBadges({ incentives, showDetail = false }: Ince
       {/* Purchase incentive badge (purple) */}
       {purchaseIncentives.length > 0 && (
         <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-          💰 Purchase Incentive
+          Purchase Incentive
           {showDetail && purchaseIncentives[0].amount_dollars != null && purchaseIncentives[0].amount_dollars > 0 && (
             <span className="font-bold">
               : ${purchaseIncentives[0].amount_dollars.toLocaleString()}
@@ -43,7 +43,7 @@ export default function IncentiveBadges({ incentives, showDetail = false }: Ince
       {/* Ongoing earning badge (emerald) */}
       {ongoingIncentives.length > 0 && (
         <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-          📈 Ongoing Earnings
+          Ongoing Earnings
           {showDetail && ongoingIncentives[0].estimated_annual_value != null && (
             <span className="font-bold">
               : ~${ongoingIncentives[0].estimated_annual_value.toLocaleString()}/yr

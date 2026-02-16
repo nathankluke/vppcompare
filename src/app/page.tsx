@@ -62,7 +62,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 1 */}
             <div className="text-center p-6">
-              <div className="text-5xl mb-4">🔍</div>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">1</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
                 1. Tell Us About Your Setup
               </h3>
@@ -74,7 +74,7 @@ export default async function HomePage() {
 
             {/* Step 2 */}
             <div className="text-center p-6">
-              <div className="text-5xl mb-4">⚖️</div>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">2</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
                 2. Compare Programs &amp; Batteries
               </h3>
@@ -86,7 +86,7 @@ export default async function HomePage() {
 
             {/* Step 3 */}
             <div className="text-center p-6">
-              <div className="text-5xl mb-4">📊</div>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold">3</div>
               <h3 className="text-xl font-semibold text-slate-800 mb-2">
                 3. Calculate Your ROI
               </h3>

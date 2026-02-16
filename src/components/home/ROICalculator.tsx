@@ -48,7 +48,7 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-4">
       <h4 className="text-lg font-bold text-slate-800 mb-1">
-        📊 ROI Calculator
+        ROI Calculator
       </h4>
       <p className="text-sm text-slate-500 mb-4">
         {batteryName}{vppName ? ` + ${vppName}` : ''}
@@ -103,7 +103,7 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
                   <span className={`text-xs w-20 text-right font-medium
                                     ${year.isPaidOff ? 'text-emerald-600' : 'text-slate-600'}`}>
                     {year.isPaidOff ? (
-                      <>✅ +${Math.abs(Math.round(year.remainingCost)).toLocaleString()}</>
+                      <>+${Math.abs(Math.round(year.remainingCost)).toLocaleString()}</>
                     ) : (
                       <>-${Math.round(year.remainingCost).toLocaleString()}</>
                     )}
@@ -153,7 +153,7 @@ function OwnerROIDisplay({ roi, vppName }: { roi: OwnerROI; vppName?: string }) 
   return (
     <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-5 mt-4">
       <h4 className="text-base font-bold text-emerald-800 mb-1">
-        💰 Projected Earnings{vppName ? ` — ${vppName}` : ''}
+        Projected Earnings{vppName ? ` — ${vppName}` : ''}
       </h4>
       <p className="text-sm text-emerald-600 mb-3">
         Your existing battery could earn you:

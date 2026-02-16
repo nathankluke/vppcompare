@@ -16,7 +16,7 @@ export default function HeroSection({ vppCount = 12, stateCount = 10 }: HeroSect
       <div className="max-w-4xl mx-auto text-center">
         {/* Main headline */}
         <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
-          Turn Your Home Battery Into a Money-Making Machine
+          Keep the Lights On. Get Paid for It.
         </h1>
 
         {/* VPP explanation */}

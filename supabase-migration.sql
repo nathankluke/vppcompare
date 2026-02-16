@@ -122,7 +122,7 @@ INSERT INTO vpp_incentives (vpp_id, incentive_type, name, description, amount_do
 -- Base Power VPP - install model
 INSERT INTO vpp_incentives (vpp_id, incentive_type, name, description, amount_dollars, frequency, estimated_annual_value, qualifying_notes) VALUES
 ('388a4467-d17d-4b3f-a0bb-169b2041158a', 'purchase', 'Free Battery Installation', 'Base Power installs and maintains a battery at your home at no upfront cost.', 0, 'one-time', NULL, 'Battery owned by Base Power. Low monthly service fee.'),
-('388a4467-d17d-4b3f-a0bb-169b2041158a', 'ongoing', 'Grid Services Revenue Share', 'Earn a share of revenue from grid services provided by your battery.', NULL, 'monthly', 300);
+('388a4467-d17d-4b3f-a0bb-169b2041158a', 'ongoing', 'Grid Services Revenue Share', 'Earn a share of revenue from grid services provided by your battery.', NULL, 'monthly', 300, NULL);
 
 -- NRG / Renew Home VPP - ongoing only
 INSERT INTO vpp_incentives (vpp_id, incentive_type, name, description, amount_dollars, frequency, estimated_annual_value) VALUES

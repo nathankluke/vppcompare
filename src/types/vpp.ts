@@ -72,7 +72,8 @@ export interface UserSetup {
   batteryBrand: string;                   // e.g. "Tesla Powerwall", "Enphase", "None"
   batteryCapacity: number;                // kWh (5-50)
 
-  // --- Path B: "I'm looking to buy a battery" ---
-  budgetMin: number;                      // Minimum budget in USD
-  budgetMax: number;                      // Maximum budget in USD
+  // --- Path B: "I need a battery" ---
+  budgetMin: number;                      // Minimum budget in USD (legacy, kept for compat)
+  budgetMax: number;                      // Maximum budget in USD (legacy, kept for compat)
+  batterySizeRange: 'starter' | 'midrange' | 'fullsize' | 'maxcapacity';  // Selected battery capacity range
 }

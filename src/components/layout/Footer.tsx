@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <p className="text-white font-bold text-lg">VPPCompare</p>
             <p className="text-sm text-slate-400 mt-1">
-              Compare Virtual Power Plants in Colorado &amp; the USA
+              Compare Virtual Power Plants in the USA
             </p>
           </div>
 
@@ -44,6 +44,12 @@ export default function Footer() {
               Terms
             </Link>
             <Link
+              href="/revenue-disclosure"
+              className="hover:text-white transition-colors duration-200"
+            >
+              Revenue Disclosure
+            </Link>
+            <Link
               href="/contact"
               className="hover:text-white transition-colors duration-200"
             >
@@ -59,7 +65,7 @@ export default function Footer() {
         <div className="text-center text-sm text-slate-400">
           <p>&copy; 2026 VPPCompare.com. All rights reserved.</p>
           <p className="mt-1">
-            Helping Americans find the best Virtual Power Plant programs.
+            Helping you find the best Virtual Power Plant programs.
           </p>
         </div>
       </div>

@@ -1,13 +1,13 @@
 // =============================================================================
 // Buyer VPP Results Component
 // =============================================================================
-// Shows VPP programs for the "Looking to Buy" path.
+// Shows VPP programs for the "I Need a Battery" path.
 // Each VPP card is followed by compatible Battery Partner cards.
 // Users can click a battery to see the ROI calculator.
 //
 // Filters:
 //   - By state (from zip code)
-//   - By budget (only shows batteries in the user's price range)
+//   - By battery capacity range (selected size)
 //   - Prioritizes VPPs with purchase incentives
 // =============================================================================
 
@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { VPP, UserSetup } from '@/types/vpp'
 import { Battery } from '@/types/battery'
 import { getStateName } from '@/lib/zipToState'
+import { BATTERY_SIZE_RANGES } from '@/lib/batterySizeRanges'
 import VPPCard from '@/components/vpp/VPPCard'
 import BatteryPartnerCard from '@/components/vpp/BatteryPartnerCard'
 import IncentiveBadges from '@/components/vpp/IncentiveBadges'
@@ -35,10 +36,11 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
     vpp: VPP
   } | null>(null)
 
-  // Filter batteries by budget
-  const budgetBatteries = batteries.filter(
-    (b) => b.price_installed >= userSetup.budgetMin && b.price_installed <= userSetup.budgetMax
-  )
+  // Filter batteries by selected capacity range
+  const sizeRange = BATTERY_SIZE_RANGES.find((r) => r.key === userSetup.batterySizeRange)
+  const filteredBatteries = sizeRange
+    ? batteries.filter((b) => b.capacity_kwh >= sizeRange.minKwh && b.capacity_kwh <= sizeRange.maxKwh)
+    : batteries
 
   // If no zip entered, show info prompt
   if (!userSetup.state) {
@@ -52,7 +54,8 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
             <VPPWithBatteries
               key={vpp.id}
               vpp={vpp}
-              batteries={budgetBatteries}
+              batteries={filteredBatteries}
+              userSetup={userSetup}
               onSelectROI={(battery) => setSelectedROI({ battery, vpp })}
             />
           ))}
@@ -69,7 +72,7 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
     const stateName = getStateName(userSetup.state)
     return (
       <div className="text-center py-12">
-        <div className="text-5xl mb-4">🔜</div>
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl font-bold">--</div>
         <h3 className="text-xl font-bold text-slate-700 mb-2">
           VPP programs haven&apos;t reached {stateName} yet
         </h3>
@@ -96,14 +99,14 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
       <p className="text-sm text-slate-600 mb-6 text-center">
         Showing <strong>{sortedVPPs.length}</strong> VPP program{sortedVPPs.length !== 1 ? 's' : ''}{' '}
         in <strong>{stateName}</strong> with{' '}
-        <strong>{budgetBatteries.length}</strong> batteries in your budget
+        <strong>{filteredBatteries.length}</strong> batteries in the {sizeRange?.label} range ({sizeRange?.range})
       </p>
 
-      {budgetBatteries.length === 0 && (
+      {filteredBatteries.length === 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-center">
           <p className="text-amber-700 text-sm">
-            No batteries found in the ${userSetup.budgetMin.toLocaleString()}–${userSetup.budgetMax.toLocaleString()} range.
-            Try expanding your budget range.
+            No batteries found in the {sizeRange?.label} range ({sizeRange?.range}).
+            Try selecting a different battery size.
           </p>
         </div>
       )}
@@ -113,7 +116,8 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
           <VPPWithBatteries
             key={vpp.id}
             vpp={vpp}
-            batteries={budgetBatteries}
+            batteries={filteredBatteries}
+            userSetup={userSetup}
             onSelectROI={(battery) => setSelectedROI({ battery, vpp })}
           />
         ))}
@@ -144,12 +148,21 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
 function VPPWithBatteries({
   vpp,
   batteries,
+  userSetup,
   onSelectROI,
 }: {
   vpp: VPP
   batteries: Battery[]
+  userSetup: UserSetup
   onSelectROI: (battery: Battery) => void
 }) {
+  // Check qualification
+  const isQualified = !vpp.solar_required || userSetup.hasSolar
+  const disqualificationReasons: string[] = []
+  if (vpp.solar_required && !userSetup.hasSolar) {
+    disqualificationReasons.push('Solar panels required for this program')
+  }
+
   // Get compatible batteries for this VPP
   const compatBatteries = vpp.compatible_batteries
     ?.map((cb) => {
@@ -158,16 +171,31 @@ function VPPWithBatteries({
     })
     .filter(Boolean) as { battery: Battery; isRecommended: boolean; notes: string | null }[] | undefined
 
-  // If no specific compatibility data, show all batteries in budget
+  // If no specific compatibility data, show all batteries in size range
   const displayBatteries = compatBatteries && compatBatteries.length > 0
     ? compatBatteries
     : batteries.slice(0, 4).map((b) => ({ battery: b, isRecommended: false, notes: null }))
 
-  // Get purchase incentives for this VPP
+  // Get purchase and ongoing incentives for this VPP
   const purchaseIncentives = vpp.incentives?.filter((i) => i.incentive_type === 'purchase') ?? []
+  const ongoingIncentives = vpp.incentives?.filter((i) => i.incentive_type === 'ongoing') ?? []
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className={`bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden
+      ${!isQualified ? 'opacity-60 grayscale' : ''}`}>
+
+      {/* Disqualification banner */}
+      {!isQualified && disqualificationReasons.length > 0 && (
+        <div className="bg-slate-100 border-b border-slate-300 px-6 py-3">
+          <p className="text-sm font-semibold text-slate-500">Not currently eligible</p>
+          <ul className="text-xs text-slate-400 mt-1">
+            {disqualificationReasons.map((reason, i) => (
+              <li key={i}>- {reason}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* VPP Header */}
       <div className="p-4 border-b border-slate-100">
         <div className="flex items-start justify-between">
@@ -187,7 +215,7 @@ function VPPWithBatteries({
       {displayBatteries.length > 0 && (
         <div className="p-4 bg-slate-50">
           <h4 className="text-sm font-semibold text-slate-700 mb-3">
-            🔋 Compatible Batteries
+            Compatible Batteries
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {displayBatteries.map(({ battery, isRecommended }) => (
@@ -195,6 +223,7 @@ function VPPWithBatteries({
                 key={battery.id}
                 battery={battery}
                 purchaseIncentives={purchaseIncentives}
+                ongoingIncentives={ongoingIncentives}
                 isRecommended={isRecommended}
                 onSelect={onSelectROI}
               />

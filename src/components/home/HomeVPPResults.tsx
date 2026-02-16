@@ -7,6 +7,7 @@
 //   - Checks battery brand compatibility
 //   - Checks solar requirement
 //   - Shows green/yellow/red compatibility badges
+//   - Grays out unqualified programs
 // =============================================================================
 
 'use client'
@@ -105,7 +106,7 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
     const stateName = getStateName(userSetup.state)
     return (
       <div className="text-center py-12">
-        <div className="text-5xl mb-4">🔜</div>
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl font-bold">--</div>
         <h3 className="text-xl font-bold text-slate-700 mb-2">
           VPP programs haven&apos;t reached {stateName} yet
         </h3>
@@ -117,22 +118,35 @@ export default function HomeVPPResults({ vpps, userSetup }: HomeVPPResultsProps)
     )
   }
 
-  // Show VPPs with compatibility badges
+  // Sort: qualified programs first, then by compatibility
   const stateName = getStateName(userSetup.state)
+  const sortedVPPs = [...stateVPPs].sort((a, b) => {
+    const aCompat = getCompatibility(a, userSetup)
+    const bCompat = getCompatibility(b, userSetup)
+    const order = { compatible: 0, unknown: 1, partial: 2, incompatible: 3 }
+    return order[aCompat.status] - order[bCompat.status]
+  })
+
   return (
     <div>
       <p className="text-sm text-slate-600 mb-6 text-center">
-        Showing <strong>{stateVPPs.length}</strong> VPP program{stateVPPs.length !== 1 ? 's' : ''}{' '}
+        Showing <strong>{sortedVPPs.length}</strong> VPP program{sortedVPPs.length !== 1 ? 's' : ''}{' '}
         available in <strong>{stateName}</strong>
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {stateVPPs.map((vpp) => {
+        {sortedVPPs.map((vpp) => {
           const compat = getCompatibility(vpp, userSetup)
+          const isQualified = compat.status === 'compatible' || compat.status === 'unknown'
           return (
             <div key={vpp.id}>
               <VPPMatchBadge status={compat.status} reasons={compat.reasons} />
-              <VPPCard vpp={vpp} mode="have-battery" />
+              <VPPCard
+                vpp={vpp}
+                mode="have-battery"
+                isQualified={isQualified}
+                disqualificationReasons={compat.status === 'incompatible' ? compat.reasons : undefined}
+              />
             </div>
           )
         })}

@@ -43,6 +43,7 @@ export default function HomeInteractiveSection({ vpps, batteries }: HomeInteract
     // Path B specific
     budgetMin: 5000,
     budgetMax: 20000,
+    batterySizeRange: 'fullsize',
   })
 
   return (

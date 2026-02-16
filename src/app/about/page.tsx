@@ -1,8 +1,7 @@
 // =============================================================================
 // About Page — src/app/about/page.tsx
 // =============================================================================
-// A simple content page that explains what VPPCompare is, our mission,
-// and why we built this tool.
+// Company info for VPPcompare LLC. Independent, ad-free comparison tool.
 // =============================================================================
 
 import Link from 'next/link'
@@ -16,15 +15,29 @@ export default function AboutPage() {
         {/* ---- Page Heading ---- */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-800 mb-4">
-            About VPPCompare
+            About VPPcompare
           </h1>
           <p className="text-lg text-slate-500">
-            Colorado&apos;s independent Virtual Power Plant comparison tool.
+            An independent, ad-free Virtual Power Plant comparison tool.
           </p>
         </div>
 
         {/* ---- Main Content ---- */}
         <div className="bg-white rounded-xl shadow-md border border-slate-200 p-8 space-y-6 text-slate-600 leading-relaxed">
+
+          {/* Who We Are */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-800 mb-3">
+              Who We Are
+            </h2>
+            <p>
+              VPPcompare is operated by VPPcompare LLC, a Colorado-based company
+              dedicated to helping homeowners navigate the growing world of Virtual
+              Power Plants. We built this tool because we believe every homeowner
+              with a battery deserves clear, honest information about the programs
+              available to them.
+            </p>
+          </section>
 
           {/* What We Do */}
           <section>
@@ -32,69 +45,52 @@ export default function AboutPage() {
               What We Do
             </h2>
             <p>
-              VPPCompare is a free comparison website that helps homeowners in
-              Colorado and across the United States find the best Virtual Power
-              Plant (VPP) program for their home. We gather information about
-              VPP programs from across the country and present it in a clear,
-              easy-to-compare format.
+              VPPcompare is a free comparison website that helps homeowners across
+              the United States find the best Virtual Power Plant program for their
+              home. We research VPP programs nationwide and present the details in
+              a clear, side-by-side format so you can compare incentives, earnings
+              potential, and requirements at a glance.
+            </p>
+            <p className="mt-3">
+              Whether you already own a home battery or are considering purchasing
+              one, VPPcompare helps you understand which programs you qualify for,
+              what you can earn, and how to get started.
             </p>
           </section>
 
-          {/* Our Mission */}
+          {/* Independent & Ad-Free */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Our Mission
+              Independent &amp; Ad-Free
             </h2>
             <p>
-              Our mission is to accelerate America&apos;s clean energy
-              transition by making it simple for homeowners to participate in
-              Virtual Power Plants. We believe that informed consumers make
-              better choices, and better choices lead to a cleaner, more
-              resilient energy grid for everyone.
+              VPPcompare is completely independent. We are not owned by, affiliated
+              with, or funded by any utility company, energy retailer, or battery
+              manufacturer. We do not display ads. Our revenue model is based on
+              referral relationships with select partners — you can learn more on
+              our{' '}
+              <Link
+                href="/revenue-disclosure"
+                className="text-blue-700 underline hover:text-blue-900"
+              >
+                Revenue Disclosure
+              </Link>{' '}
+              page.
             </p>
           </section>
 
-          {/* Why VPPs Matter */}
+          {/* Disclaimer */}
           <section>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Why VPPs Matter
+              Important Disclaimer
             </h2>
             <p>
-              Virtual Power Plants are transforming America&apos;s energy
-              landscape. By connecting thousands of home batteries into a
-              coordinated network, VPPs can respond to grid demand just like a
-              traditional power station — but without burning fossil fuels.
-              Homeowners who participate get paid for contributing to a more
-              stable and sustainable grid.
-            </p>
-          </section>
-
-          {/* Why Colorado */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Why Colorado?
-            </h2>
-            <p>
-              Colorado is one of the best states in the US for solar energy,
-              with over 300 days of sunshine per year. Combined with the
-              state&apos;s progressive clean energy goals and growing home
-              battery adoption, Colorado is a natural hub for Virtual Power
-              Plant programs. We started here and are expanding coverage
-              across the country.
-            </p>
-          </section>
-
-          {/* Independent & Transparent */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              Independent &amp; Transparent
-            </h2>
-            <p>
-              VPPCompare is an independent platform. We are not owned by any
-              energy retailer or battery manufacturer. Our goal is to provide
-              honest, unbiased comparisons so you can make the best decision
-              for your household. We strive to keep our data accurate and
-              up to date.
+              VPPcompare is not a utility company, energy retailer, or financial
+              advisor. The information on this site is provided for educational
+              and comparison purposes only. We do our best to keep program details
+              accurate and up to date, but program terms, incentives, and
+              availability can change at any time. Always verify details directly
+              with the VPP provider before making any decisions.
             </p>
           </section>
 
@@ -105,12 +101,12 @@ export default function AboutPage() {
             </h2>
             <p>
               Have a question, suggestion, or want to submit a VPP program for
-              inclusion? We would love to hear from you. Reach out to us at{' '}
+              inclusion? We&apos;d love to hear from you. Reach out at{' '}
               <a
-                href="mailto:hello@vppcompare.com"
+                href="mailto:info@vppcompare.com"
                 className="text-blue-700 underline hover:text-blue-900"
               >
-                hello@vppcompare.com
+                info@vppcompare.com
               </a>
               .
             </p>

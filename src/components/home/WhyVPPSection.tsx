@@ -4,38 +4,38 @@
 // Explains WHY Virtual Power Plants matter — inspired by Octopus Energy's
 // "Why is this program important" messaging.
 //
-// Four benefit cards covering:
-//   1. Grid stability / prevent blackouts
-//   2. Earn money from your battery
-//   3. Support the clean energy transition
-//   4. Reduce electricity costs for everyone
+// Four benefit cards with clean styled icons (no emojis).
 // =============================================================================
 
 export default function WhyVPPSection() {
   const benefits = [
     {
-      icon: '⚡',
+      iconBg: 'bg-amber-100 text-amber-700',
+      iconChar: '\u26A1',
       title: 'Prevent Blackouts',
       description:
         'During extreme heat or cold, the grid gets overwhelmed. Your battery helps meet peak demand and keeps the lights on for your community.',
     },
     {
-      icon: '💰',
+      iconBg: 'bg-emerald-100 text-emerald-700',
+      iconChar: '$',
       title: 'Earn Money',
       description:
-        'Get paid $300–$1,500+ per year just by letting your battery help the grid when it needs it most. Some programs also offer big upfront rebates.',
+        'Get paid $300\u20131,500+ per year just by letting your battery help the grid when it needs it most. Some programs also offer big upfront rebates.',
     },
     {
-      icon: '🌿',
+      iconBg: 'bg-green-100 text-green-700',
+      iconChar: '\u2600',
       title: 'Clean Energy',
       description:
         'VPPs replace expensive, dirty gas "peaker" plants that only run during peak demand. Your battery is the cleaner, cheaper alternative.',
     },
     {
-      icon: '📉',
+      iconBg: 'bg-blue-100 text-blue-700',
+      iconChar: '\u2193',
       title: 'Lower Everyone\'s Bills',
       description:
-        'When batteries reduce peak grid stress, utility companies spend less on emergency power — savings that get passed to all ratepayers.',
+        'When batteries reduce peak grid stress, utility companies spend less on emergency power \u2014 savings that get passed to all ratepayers.',
     },
   ]
 
@@ -57,7 +57,9 @@ export default function WhyVPPSection() {
               className="bg-slate-50 rounded-xl p-6 text-center border border-slate-100
                          hover:border-blue-200 hover:shadow-sm transition-all duration-200"
             >
-              <div className="text-4xl mb-3">{benefit.icon}</div>
+              <div className={`w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center text-2xl font-bold ${benefit.iconBg}`}>
+                {benefit.iconChar}
+              </div>
               <h3 className="text-lg font-semibold text-slate-800 mb-2">
                 {benefit.title}
               </h3>

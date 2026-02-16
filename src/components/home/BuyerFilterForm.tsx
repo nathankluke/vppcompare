@@ -1,10 +1,10 @@
 // =============================================================================
 // Buyer Filter Form Component
 // =============================================================================
-// The form shown on the "Looking to Buy" path. Collects:
+// The form shown on the "I Need a Battery" path. Collects:
 //   - Zip code (auto-resolves to state)
 //   - Solar toggle + solar size slider
-//   - Budget range (min and max sliders)
+//   - Battery size range (4 selectable options)
 //
 // Reuses the Toggle and Slider components from the existing form.
 // =============================================================================
@@ -13,6 +13,7 @@
 
 import { UserSetup } from '@/types/vpp'
 import { getStateFromZip, getStateName } from '@/lib/zipToState'
+import { BATTERY_SIZE_RANGES } from '@/lib/batterySizeRanges'
 import Toggle from '@/components/ui/Toggle'
 import Slider from '@/components/ui/Slider'
 
@@ -63,7 +64,7 @@ export default function BuyerFilterForm({ setup, onSetupChange }: BuyerFilterFor
                        text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {stateName && (
-            <span className="text-sm text-emerald-600 font-medium">→ {stateName}</span>
+            <span className="text-sm text-emerald-600 font-medium">{stateName}</span>
           )}
           {setup.zip.length >= 3 && !setup.state && (
             <span className="text-sm text-red-500">Zip not recognized</span>
@@ -91,43 +92,34 @@ export default function BuyerFilterForm({ setup, onSetupChange }: BuyerFilterFor
         />
       )}
 
-      {/* Budget Range */}
+      {/* Battery Size Range Selector */}
       <div className="pt-2 border-t border-slate-100">
-        <p className="text-sm font-medium text-slate-700 mb-3">Battery Budget Range</p>
-        <Slider
-          label="Minimum Budget"
-          value={setup.budgetMin}
-          min={5000}
-          max={25000}
-          step={1000}
-          unit="$"
-          onChange={(val) => {
-            // Ensure min doesn't exceed max
-            const newMin = Math.min(val, setup.budgetMax - 1000)
-            updateField('budgetMin', newMin)
-          }}
-        />
-        <div className="mt-3">
-          <Slider
-            label="Maximum Budget"
-            value={setup.budgetMax}
-            min={5000}
-            max={25000}
-            step={1000}
-            unit="$"
-            onChange={(val) => {
-              // Ensure max doesn't go below min
-              const newMax = Math.max(val, setup.budgetMin + 1000)
-              updateField('budgetMax', newMax)
-            }}
-          />
+        <p className="text-sm font-medium text-slate-700 mb-3">Battery Size</p>
+        <div className="grid grid-cols-2 gap-2">
+          {BATTERY_SIZE_RANGES.map((size) => (
+            <button
+              key={size.key}
+              onClick={() => updateField('batterySizeRange', size.key)}
+              className={`relative p-3 rounded-lg border text-left transition-all duration-200 cursor-pointer
+                ${setup.batterySizeRange === size.key
+                  ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-200'
+                  : 'border-slate-200 bg-white hover:border-blue-300'}`}
+            >
+              {size.recommended && (
+                <span className="absolute -top-2 right-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full font-semibold">
+                  Optimal
+                </span>
+              )}
+              <p className="font-bold text-sm text-slate-800">{size.label}</p>
+              <p className="text-xs text-blue-700 font-medium">{size.range}</p>
+              <p className="text-xs text-slate-400 mt-1">{size.description}</p>
+            </button>
+          ))}
         </div>
+        <p className="text-xs text-slate-400 mt-2">
+          Full-Size batteries (13-14 kWh) qualify for the most VPP programs and offer the best ROI after 30% ITC.
+        </p>
       </div>
-
-      {/* Budget info */}
-      <p className="text-xs text-slate-400">
-        30% federal tax credit and VPP rebates can significantly reduce your out-of-pocket cost.
-      </p>
     </div>
   )
 }
