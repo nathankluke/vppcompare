@@ -4,7 +4,14 @@
 // CCPA/CPRA and CPA compliant privacy policy for VPPcompare LLC.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'VPPcompare privacy policy. Cookie-free, CCPA/CPRA and CPA compliant. Learn how we handle your data.',
+  alternates: { canonical: '/privacy' },
+}
 
 export default function PrivacyPolicyPage() {
   return (

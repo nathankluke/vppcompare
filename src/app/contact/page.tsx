@@ -4,7 +4,14 @@
 // Contact info for VPPcompare LLC.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with VPPcompare LLC. Questions about Virtual Power Plant programs, partnership opportunities, or feedback.',
+  alternates: { canonical: '/contact' },
+}
 
 export default function ContactPage() {
   return (

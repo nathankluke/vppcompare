@@ -25,14 +25,87 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-// Metadata for SEO — this sets the <title> and <meta description> tags
+// Comprehensive SEO metadata — Open Graph, Twitter Cards, search engine hints
 export const metadata: Metadata = {
-  title: 'VPPCompare - Compare Virtual Power Plants in the USA',
+  // Core
+  title: {
+    default: 'VPPCompare — Compare Virtual Power Plant Programs in the USA',
+    template: '%s | VPPCompare',
+  },
   description:
-    'Find and compare the best Virtual Power Plant programs across the United States. Compare feed-in rates, signup bonuses, and battery compatibility.',
+    'Find and compare the best Virtual Power Plant programs across the United States. Compare VPP earnings, feed-in rates, signup bonuses, battery compatibility, and calculate your ROI.',
+  keywords: [
+    'virtual power plant', 'VPP', 'VPP comparison', 'home battery earnings',
+    'Tesla Powerwall VPP', 'Enphase VPP', 'Sonnen VPP', 'battery storage',
+    'grid services', 'demand response', 'energy storage', 'solar battery',
+    'VPP programs by state', 'battery incentives', 'ROI calculator',
+    'ConnectedSolutions', 'Sunrun VPP', 'Green Mountain Power',
+  ],
+  authors: [{ name: 'VPPcompare LLC' }],
+  creator: 'VPPcompare LLC',
+  publisher: 'VPPcompare LLC',
+
+  // Icons
   icons: {
     icon: '/favicon.svg',
+    apple: '/favicon.svg',
   },
+
+  // Canonical URL
+  metadataBase: new URL('https://vppcompare.com'),
+  alternates: {
+    canonical: '/',
+  },
+
+  // Open Graph — Facebook, LinkedIn, iMessage, Slack, Discord, etc.
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://vppcompare.com',
+    siteName: 'VPPCompare',
+    title: 'VPPCompare — Compare Virtual Power Plant Programs in the USA',
+    description:
+      'Compare VPP earnings, incentives, and battery compatibility across the US. Find out how much your home battery can earn you.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'VPPCompare — Compare Virtual Power Plant Programs',
+      },
+    ],
+  },
+
+  // Twitter Card — how it looks when shared on X/Twitter
+  twitter: {
+    card: 'summary_large_image',
+    title: 'VPPCompare — Compare Virtual Power Plant Programs in the USA',
+    description:
+      'Compare VPP earnings, incentives, and battery compatibility across the US. Find out how much your home battery can earn you.',
+    images: ['/og-image.png'],
+  },
+
+  // Search engine directives
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // Verification tags — fill these in after registering with each console
+  // verification: {
+  //   google: 'your-google-verification-code',
+  //   yandex: 'your-yandex-verification-code',
+  //   other: {
+  //     'msvalidate.01': 'your-bing-verification-code',
+  //   },
+  // },
 }
 
 export default function RootLayout({

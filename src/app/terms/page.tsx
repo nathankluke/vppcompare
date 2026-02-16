@@ -5,7 +5,14 @@
 // affiliate disclosure, IP, liability limitation, governed by Colorado law.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description: 'VPPcompare terms of service. Informational purposes only, no financial advice, governed by Colorado law.',
+  alternates: { canonical: '/terms' },
+}
 
 export default function TermsPage() {
   return (

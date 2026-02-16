@@ -5,7 +5,14 @@
 // Ad-free, referral-based model.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'How VPPcompare Makes Money',
+  description: 'Transparent revenue disclosure. VPPcompare is ad-free and earns referral commissions when users sign up for VPP programs through our links.',
+  alternates: { canonical: '/revenue-disclosure' },
+}
 
 export default function RevenueDisclosurePage() {
   return (

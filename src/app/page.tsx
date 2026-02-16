@@ -16,6 +16,7 @@ import HeroSection from '@/components/home/HeroSection'
 import WhyVPPSection from '@/components/home/WhyVPPSection'
 import HomeInteractiveSection from '@/components/home/HomeInteractiveSection'
 import FAQSection from '@/components/home/FAQSection'
+import JsonLd from '@/components/seo/JsonLd'
 import { getAllVPPsWithIncentives } from '@/lib/getVPPs'
 import { getAllBatteries } from '@/lib/getBatteries'
 
@@ -35,6 +36,9 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Structured data for Google rich results */}
+      <JsonLd />
+
       {/* ================================================================
           SECTION 1: Hero
           ================================================================ */}

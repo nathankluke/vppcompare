@@ -8,8 +8,15 @@
 // then passes it to the MapPageClient for interactivity.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import { getAllVPPs } from '@/lib/getVPPs'
 import MapPageClient from '@/components/map/MapPageClient'
+
+export const metadata: Metadata = {
+  title: 'VPP Programs by State — Interactive US Map',
+  description: 'Interactive map showing Virtual Power Plant programs available in each US state. Click your state to see which VPP providers operate in your area.',
+  alternates: { canonical: '/map' },
+}
 
 // Fetch fresh data on every request
 export const dynamic = 'force-dynamic'

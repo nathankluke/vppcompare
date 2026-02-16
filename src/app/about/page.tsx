@@ -4,8 +4,15 @@
 // Company info for VPPcompare LLC. Independent, ad-free comparison tool.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
+
+export const metadata: Metadata = {
+  title: 'About VPPCompare',
+  description: 'VPPcompare is an independent, ad-free comparison tool that helps homeowners find and compare Virtual Power Plant programs across the United States.',
+  alternates: { canonical: '/about' },
+}
 
 export default function AboutPage() {
   return (

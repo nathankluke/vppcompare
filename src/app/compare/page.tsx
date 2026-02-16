@@ -10,8 +10,15 @@
 //   Client (VPPFilterBar) → filters/sorts them based on user input
 // =============================================================================
 
+import type { Metadata } from 'next'
 import VPPFilterBar from '@/components/vpp/VPPFilterBar'
 import { getAllVPPs } from '@/lib/getVPPs'
+
+export const metadata: Metadata = {
+  title: 'Compare All VPP Programs',
+  description: 'Side-by-side comparison of every Virtual Power Plant program in the US. Filter by state, battery brand, feed-in rate, and signup bonus.',
+  alternates: { canonical: '/compare' },
+}
 
 // Tell Next.js to fetch fresh data on every request (not cache at build time)
 export const dynamic = 'force-dynamic'

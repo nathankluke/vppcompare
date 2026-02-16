@@ -5,8 +5,15 @@
 // This page helps users who are new to Virtual Power Plants.
 // =============================================================================
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
+
+export const metadata: Metadata = {
+  title: 'How It Works — What Is a Virtual Power Plant?',
+  description: 'Learn how Virtual Power Plants work, how to earn money from your home battery, and how VPPCompare helps you find the best VPP program for your setup.',
+  alternates: { canonical: '/how-it-works' },
+}
 
 export default function HowItWorksPage() {
   return (
