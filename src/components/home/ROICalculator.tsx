@@ -82,7 +82,7 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
           </h5>
 
           <div className="space-y-1.5">
-            {roi.yearByYear.slice(0, 8).map((year) => {
+            {roi.yearByYear.slice(0, Math.min(8, roi.yearByYear.length)).map((year) => {
               const earningsPercent = Math.min((year.cumulativeEarnings / roi.netCost) * 100, 100)
               return (
                 <div key={year.year} className="flex items-center gap-2">
@@ -122,7 +122,11 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
             <div className="text-right">
               <p className="text-slate-500">Payback Period</p>
               <p className={`font-bold ${roi.paybackYears && roi.paybackYears <= 6 ? 'text-emerald-600' : 'text-amber-600'}`}>
-                {roi.paybackYears ? `~${roi.paybackYears} years` : 'N/A'}
+                {roi.paybackYears
+                  ? roi.paybackYears > 10
+                    ? '10+ years'
+                    : `~${roi.paybackYears} years`
+                  : 'N/A'}
               </p>
             </div>
             <div className="text-right">
@@ -134,6 +138,33 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
               </p>
             </div>
           </div>
+
+          {/* Long payback — show additional battery benefits */}
+          {roi.paybackYears && roi.paybackYears > 8 && (
+            <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+              <p className="text-xs font-semibold text-slate-600 mb-1.5">
+                VPP earnings are just one benefit of a home battery:
+              </p>
+              <ul className="text-xs text-slate-500 space-y-1">
+                <li className="flex items-start gap-1.5">
+                  <span className="text-blue-500 mt-0.5">&#9679;</span>
+                  <span><strong>Backup power</strong> — keep your lights, fridge, and internet on during outages</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="text-blue-500 mt-0.5">&#9679;</span>
+                  <span><strong>Solar self-consumption</strong> — store excess solar and use it at night instead of buying from the grid</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="text-blue-500 mt-0.5">&#9679;</span>
+                  <span><strong>Time-of-use savings</strong> — charge when rates are low, discharge when rates are high</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="text-blue-500 mt-0.5">&#9679;</span>
+                  <span><strong>Home value</strong> — solar + storage systems increase property value</span>
+                </li>
+              </ul>
+            </div>
+          )}
         </>
       )}
 
