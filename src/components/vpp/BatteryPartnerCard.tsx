@@ -5,12 +5,8 @@
 // Displays the battery's price breakdown including ITC and VPP rebates,
 // plus a compact payback timeline bar.
 //
-// Props:
-//   battery            — Battery product data
-//   purchaseIncentives — One-time rebates from the parent VPP
-//   ongoingIncentives  — Recurring earnings from the parent VPP
-//   isRecommended      — Whether this battery is recommended for this VPP
-//   onSelect           — Callback for ROI calculator selection
+// Uses the low-end installed price for ROI calculations to show
+// the best realistic payback period.
 // =============================================================================
 
 import { Battery } from '@/types/battery'
@@ -31,9 +27,14 @@ export default function BatteryPartnerCard({
   isRecommended,
   onSelect,
 }: BatteryPartnerCardProps) {
-  // Calculate price after 30% ITC
-  const itcSavings = battery.itc_eligible ? Math.round(battery.price_installed * 0.30) : 0
-  const priceAfterITC = battery.price_installed - itcSavings
+  // Use low-end price for calculations (best realistic quote)
+  const baseCost = battery.price_installed_low ?? battery.price_installed
+  const highCost = battery.price_installed
+  const showRange = baseCost < highCost
+
+  // Calculate price after 30% ITC (using low-end price)
+  const itcSavings = battery.itc_eligible ? Math.round(baseCost * 0.30) : 0
+  const priceAfterITC = baseCost - itcSavings
 
   // Calculate total purchase incentive from the VPP
   const totalRebate = purchaseIncentives.reduce(
@@ -75,13 +76,22 @@ export default function BatteryPartnerCard({
 
       {/* Price breakdown */}
       <div className="space-y-1.5 text-sm">
-        {/* Original price */}
+        {/* Installed price — show range if available */}
         <div className="flex justify-between">
           <span className="text-slate-500">Installed Price</span>
           <span className="text-slate-700 font-medium">
-            ${battery.price_installed.toLocaleString()}
+            {showRange ? (
+              <>${baseCost.toLocaleString()}–${highCost.toLocaleString()}</>
+            ) : (
+              <>${baseCost.toLocaleString()}</>
+            )}
           </span>
         </div>
+
+        {/* Note: using low-end for calculations */}
+        {showRange && (
+          <p className="text-[11px] text-slate-400 text-right -mt-1">ROI based on best-case pricing</p>
+        )}
 
         {/* ITC savings */}
         {itcSavings > 0 && (
@@ -113,7 +123,7 @@ export default function BatteryPartnerCard({
         {/* Price per kWh */}
         <div className="flex justify-between text-xs text-slate-400">
           <span>Cost per kWh (before incentives)</span>
-          <span>${battery.price_per_kwh}/kWh</span>
+          <span>${Math.round(baseCost / battery.capacity_kwh)}/kWh</span>
         </div>
       </div>
 
@@ -123,7 +133,7 @@ export default function BatteryPartnerCard({
           <div className="flex justify-between text-xs mb-1">
             <span className="text-slate-500">Est. Payback</span>
             <span className={`font-bold ${paybackYears <= 5 ? 'text-emerald-600' : paybackYears <= 8 ? 'text-amber-600' : 'text-red-500'}`}>
-              ~{paybackYears} years
+              {paybackYears > 10 ? '10+' : `~${paybackYears}`} years
             </span>
           </div>
           <div className="h-2 bg-slate-100 rounded-full overflow-hidden">

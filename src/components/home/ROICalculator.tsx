@@ -54,9 +54,9 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
         {batteryName}{vppName ? ` + ${vppName}` : ''}
       </p>
 
-      {/* Cost Breakdown */}
+      {/* Cost Breakdown — uses best-case installed pricing */}
       <div className="space-y-2 mb-6">
-        <CostRow label="Installed Price" amount={roi.installedCost} color="bg-slate-300" maxValue={maxValue} />
+        <CostRow label="Installed Price (best case)" amount={roi.installedCost} color="bg-slate-300" maxValue={maxValue} />
         {roi.itcSavings > 0 && (
           <CostRow label="After 30% ITC" amount={roi.costAfterITC} color="bg-blue-400" maxValue={maxValue} highlight="-$" savings={roi.itcSavings} />
         )}

@@ -16,7 +16,8 @@ export interface Battery {
   manufacturer: string            // e.g. "Tesla"
   brand_key: string               // Matches VPP battery_brands_supported values
   capacity_kwh: number            // e.g. 13.5
-  price_installed: number         // USD price including installation
+  price_installed: number         // USD high-end installed price
+  price_installed_low: number     // USD low-end installed price (best-case quote)
   price_per_kwh: number           // Calculated: price / capacity (generated column)
   is_modular: boolean             // Can you stack multiple units?
   itc_eligible: boolean           // Eligible for 30% federal Investment Tax Credit?

@@ -49,13 +49,14 @@ export interface YearData {
 
 /**
  * Calculate ROI for a buyer purchasing a new battery + joining a VPP.
+ * Uses the low-end installed price for a more optimistic (but realistic) payback estimate.
  */
 export function calculateBuyerROI(
   battery: Battery,
   incentives: VPPIncentive[]
 ): BuyerROI {
-  // Step 1: Start with installed cost
-  const installedCost = battery.price_installed
+  // Step 1: Start with installed cost — use the low-end price for best-case ROI
+  const installedCost = battery.price_installed_low ?? battery.price_installed
 
   // Step 2: Apply 30% Investment Tax Credit (ITC) if eligible
   const itcSavings = battery.itc_eligible ? Math.round(installedCost * 0.30) : 0
