@@ -1,13 +1,14 @@
 // =============================================================================
-// Home Interactive Section Component (MAJOR UPDATE)
+// Home Interactive Section Component
 // =============================================================================
 // Client wrapper that connects the entire interactive form+results system.
 //
-// Now manages TWO PATHS via the OwnershipToggle:
+// Layout: Toggle → Form (horizontal, above) → Results (below)
+// Form sits on top so users see the zip code area immediately on page load.
+//
+// Two paths via the OwnershipToggle:
 //   Path A ("I have a battery"):  HomeFilterForm → HomeVPPResults
 //   Path B ("Looking to buy"):    BuyerFilterForm → BuyerVPPResults
-//
-// Shared state (zip, solar) persists when switching paths.
 // =============================================================================
 
 'use client'
@@ -47,46 +48,42 @@ export default function HomeInteractiveSection({ vpps, batteries }: HomeInteract
   })
 
   return (
-    <section className="py-16 px-4 bg-slate-50">
+    <section className="py-6 md:py-8 px-4 bg-slate-50">
       <div className="max-w-6xl mx-auto">
-        {/* The big toggle: "I have a battery" vs "I'm looking to buy" */}
+        {/* The toggle: "I have a battery" vs "I need a battery" */}
         <OwnershipToggle mode={mode} onChange={setMode} />
 
         {/* PATH A: I already have a battery */}
         {mode === 'have-battery' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-4">
-              <HomeFilterForm
-                setup={userSetup}
-                onSetupChange={setUserSetup}
-              />
-            </div>
-            <div className="lg:col-span-8">
-              <HomeVPPResults
-                vpps={vpps}
-                userSetup={userSetup}
-                onSwitchToBuyer={() => setMode('buying-battery')}
-              />
-            </div>
+          <div className="space-y-5">
+            {/* Form — full width above cards */}
+            <HomeFilterForm
+              setup={userSetup}
+              onSetupChange={setUserSetup}
+            />
+            {/* Results below */}
+            <HomeVPPResults
+              vpps={vpps}
+              userSetup={userSetup}
+              onSwitchToBuyer={() => setMode('buying-battery')}
+            />
           </div>
         )}
 
         {/* PATH B: I'm looking to buy a battery */}
         {mode === 'buying-battery' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-4">
-              <BuyerFilterForm
-                setup={userSetup}
-                onSetupChange={setUserSetup}
-              />
-            </div>
-            <div className="lg:col-span-8">
-              <BuyerVPPResults
-                vpps={vpps}
-                batteries={batteries}
-                userSetup={userSetup}
-              />
-            </div>
+          <div className="space-y-5">
+            {/* Form — full width above cards */}
+            <BuyerFilterForm
+              setup={userSetup}
+              onSetupChange={setUserSetup}
+            />
+            {/* Results below */}
+            <BuyerVPPResults
+              vpps={vpps}
+              batteries={batteries}
+              userSetup={userSetup}
+            />
           </div>
         )}
       </div>
