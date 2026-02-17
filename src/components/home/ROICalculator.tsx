@@ -4,8 +4,9 @@
 // Shows a visual payback timeline for buying a battery + joining a VPP.
 // Displays:
 //   1. Cost breakdown (installed → after ITC → after rebate → net cost)
-//   2. Year-by-year earnings bar chart
-//   3. Payback period indicator with 5-6 year homeownership context
+//   2. Annual earnings breakdown (VPP + self-consumption + TOU arbitrage)
+//   3. Year-by-year earnings bar chart
+//   4. Payback period indicator with 5-6 year homeownership context
 //
 // For existing battery owners, shows simpler projected earnings.
 // =============================================================================
@@ -14,7 +15,7 @@
 
 import { Battery } from '@/types/battery'
 import { VPPIncentive } from '@/types/incentive'
-import { OwnershipMode } from '@/types/vpp'
+import { OwnershipMode, UserSetup } from '@/types/vpp'
 import { calculateBuyerROI, calculateOwnerROI, BuyerROI, OwnerROI } from '@/lib/roiCalculator'
 
 interface ROICalculatorProps {
@@ -22,18 +23,31 @@ interface ROICalculatorProps {
   battery?: Battery | null
   vppName?: string
   incentives?: VPPIncentive[]
+  userSetup?: UserSetup
 }
 
-export default function ROICalculator({ mode, battery, vppName, incentives = [] }: ROICalculatorProps) {
+export default function ROICalculator({ mode, battery, vppName, incentives = [], userSetup }: ROICalculatorProps) {
+  // Build solar options from user setup
+  const solarOptions = userSetup ? {
+    stateCode: userSetup.state,
+    hasSolar: userSetup.hasSolar,
+    solarSizeKw: userSetup.solarSize,
+    batteryKwh: userSetup.batteryCapacity,
+  } : undefined
+
   // ---------- BUYER MODE ----------
   if (mode === 'buying-battery' && battery) {
-    const roi = calculateBuyerROI(battery, incentives)
+    const buyerSolar = solarOptions ? {
+      ...solarOptions,
+      batteryKwh: battery.capacity_kwh, // Use selected battery's capacity
+    } : undefined
+    const roi = calculateBuyerROI(battery, incentives, buyerSolar)
     return <BuyerROIDisplay roi={roi} batteryName={battery.name} vppName={vppName} />
   }
 
   // ---------- OWNER MODE ----------
   if (mode === 'have-battery' && incentives.length > 0) {
-    const roi = calculateOwnerROI(incentives)
+    const roi = calculateOwnerROI(incentives, solarOptions)
     return <OwnerROIDisplay roi={roi} vppName={vppName} />
   }
 
@@ -44,6 +58,7 @@ export default function ROICalculator({ mode, battery, vppName, incentives = [] 
 function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; batteryName: string; vppName?: string }) {
   // Scale: what's the max value we need to represent?
   const maxValue = roi.installedCost
+  const hasSolarSavings = roi.annualSelfConsumption > 0 || roi.annualTOUArbitrage > 0
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-4">
@@ -70,6 +85,40 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
         <p className="text-sm text-blue-600">Your Net Cost</p>
         <p className="text-2xl font-bold text-blue-800">${roi.netCost.toLocaleString()}</p>
       </div>
+
+      {/* Annual Earnings Breakdown — show when there are multiple streams */}
+      {roi.annualEarnings > 0 && hasSolarSavings && (
+        <div className="mb-5 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+          <p className="text-xs font-semibold text-emerald-800 mb-2">Annual Battery Value Breakdown</p>
+          <div className="space-y-1.5 text-sm">
+            {roi.annualVPPEarnings > 0 && (
+              <div className="flex justify-between">
+                <span className="text-emerald-700">VPP Program Earnings</span>
+                <span className="font-medium text-emerald-800">${roi.annualVPPEarnings.toLocaleString()}/yr</span>
+              </div>
+            )}
+            {roi.annualSelfConsumption > 0 && (
+              <div className="flex justify-between">
+                <span className="text-emerald-700">Solar Self-Consumption Savings</span>
+                <span className="font-medium text-emerald-800">${roi.annualSelfConsumption.toLocaleString()}/yr</span>
+              </div>
+            )}
+            {roi.annualTOUArbitrage > 0 && (
+              <div className="flex justify-between">
+                <span className="text-emerald-700">TOU Peak Arbitrage</span>
+                <span className="font-medium text-emerald-800">${roi.annualTOUArbitrage.toLocaleString()}/yr</span>
+              </div>
+            )}
+            <div className="border-t border-emerald-300 pt-1.5 flex justify-between font-bold">
+              <span className="text-emerald-800">Total Annual Value</span>
+              <span className="text-emerald-800">${roi.annualEarnings.toLocaleString()}/yr</span>
+            </div>
+          </div>
+          <p className="text-[11px] text-emerald-600 mt-1.5">
+            Self-consumption = storing excess solar to use at night instead of buying from the grid.
+          </p>
+        </div>
+      )}
 
       {/* Payback Timeline */}
       {roi.annualEarnings > 0 && (
@@ -116,7 +165,7 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
           {/* Summary */}
           <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between text-sm">
             <div>
-              <p className="text-slate-500">Est. Annual Earnings</p>
+              <p className="text-slate-500">Est. Annual Value</p>
               <p className="font-bold text-emerald-600">~${roi.annualEarnings.toLocaleString()}/yr</p>
             </div>
             <div className="text-right">
@@ -143,21 +192,27 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
           {roi.paybackYears && roi.paybackYears > 8 && (
             <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
               <p className="text-xs font-semibold text-slate-600 mb-1.5">
-                VPP earnings are just one benefit of a home battery:
+                {hasSolarSavings
+                  ? 'Additional battery benefits not included above:'
+                  : 'VPP earnings are just one benefit of a home battery:'}
               </p>
               <ul className="text-xs text-slate-500 space-y-1">
                 <li className="flex items-start gap-1.5">
                   <span className="text-blue-500 mt-0.5">&#9679;</span>
                   <span><strong>Backup power</strong> — keep your lights, fridge, and internet on during outages</span>
                 </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-blue-500 mt-0.5">&#9679;</span>
-                  <span><strong>Solar self-consumption</strong> — store excess solar and use it at night instead of buying from the grid</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-blue-500 mt-0.5">&#9679;</span>
-                  <span><strong>Time-of-use savings</strong> — charge when rates are low, discharge when rates are high</span>
-                </li>
+                {!hasSolarSavings && (
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-blue-500 mt-0.5">&#9679;</span>
+                    <span><strong>Solar self-consumption</strong> — store excess solar and use it at night instead of buying from the grid</span>
+                  </li>
+                )}
+                {!hasSolarSavings && (
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-blue-500 mt-0.5">&#9679;</span>
+                    <span><strong>Time-of-use savings</strong> — charge when rates are low, discharge when rates are high</span>
+                  </li>
+                )}
                 <li className="flex items-start gap-1.5">
                   <span className="text-blue-500 mt-0.5">&#9679;</span>
                   <span><strong>Home value</strong> — solar + storage systems increase property value</span>
@@ -171,6 +226,7 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
       {roi.annualEarnings === 0 && (
         <p className="text-sm text-slate-500 italic">
           No estimated ongoing earnings data available for this VPP program.
+          {!hasSolarSavings && ' Toggle solar on and enter your zip to see self-consumption savings.'}
         </p>
       )}
     </div>
@@ -181,14 +237,44 @@ function BuyerROIDisplay({ roi, batteryName, vppName }: { roi: BuyerROI; battery
 function OwnerROIDisplay({ roi, vppName }: { roi: OwnerROI; vppName?: string }) {
   if (roi.annualEarnings === 0) return null
 
+  const hasSolarSavings = roi.annualSelfConsumption > 0 || roi.annualTOUArbitrage > 0
+
   return (
     <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-5 mt-4">
       <h4 className="text-base font-bold text-emerald-800 mb-1">
         Projected Earnings{vppName ? ` — ${vppName}` : ''}
       </h4>
       <p className="text-sm text-emerald-600 mb-3">
-        Your existing battery could earn you:
+        Your existing battery could earn/save you:
       </p>
+
+      {/* Earnings breakdown when solar savings exist */}
+      {hasSolarSavings && (
+        <div className="mb-3 p-2.5 bg-white/60 rounded-lg text-sm space-y-1">
+          {roi.annualVPPEarnings > 0 && (
+            <div className="flex justify-between text-emerald-700">
+              <span>VPP Earnings</span>
+              <span className="font-medium">${roi.annualVPPEarnings.toLocaleString()}/yr</span>
+            </div>
+          )}
+          {roi.annualSelfConsumption > 0 && (
+            <div className="flex justify-between text-emerald-700">
+              <span>Solar Self-Consumption</span>
+              <span className="font-medium">${roi.annualSelfConsumption.toLocaleString()}/yr</span>
+            </div>
+          )}
+          {roi.annualTOUArbitrage > 0 && (
+            <div className="flex justify-between text-emerald-700">
+              <span>TOU Peak Arbitrage</span>
+              <span className="font-medium">${roi.annualTOUArbitrage.toLocaleString()}/yr</span>
+            </div>
+          )}
+          <div className="border-t border-emerald-300 pt-1 flex justify-between font-bold text-emerald-800">
+            <span>Total Annual Value</span>
+            <span>${roi.annualEarnings.toLocaleString()}/yr</span>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-1.5">
         {roi.yearByYear.slice(1).map((year) => {

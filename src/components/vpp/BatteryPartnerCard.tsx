@@ -5,8 +5,8 @@
 // Displays the battery's price breakdown including ITC and VPP rebates,
 // plus a compact payback timeline bar.
 //
-// Uses the low-end installed price for ROI calculations to show
-// the best realistic payback period.
+// Uses the low-end installed price and includes self-consumption savings
+// for solar owners to show the most realistic payback period.
 // =============================================================================
 
 import { Battery } from '@/types/battery'
@@ -18,6 +18,8 @@ interface BatteryPartnerCardProps {
   ongoingIncentives?: VPPIncentive[]
   isRecommended: boolean
   onSelect?: (battery: Battery) => void
+  /** Annual self-consumption + TOU savings from stateEnergyRates calculator */
+  annualBatterySavings?: number
 }
 
 export default function BatteryPartnerCard({
@@ -26,6 +28,7 @@ export default function BatteryPartnerCard({
   ongoingIncentives = [],
   isRecommended,
   onSelect,
+  annualBatterySavings = 0,
 }: BatteryPartnerCardProps) {
   // Use low-end price for calculations (best realistic quote)
   const baseCost = battery.price_installed_low ?? battery.price_installed
@@ -42,12 +45,13 @@ export default function BatteryPartnerCard({
   )
   const finalPrice = Math.max(0, priceAfterITC - totalRebate)
 
-  // Calculate payback from ongoing incentives
-  const annualEarnings = ongoingIncentives.reduce(
+  // Calculate payback from ongoing VPP incentives + battery savings
+  const annualVPPEarnings = ongoingIncentives.reduce(
     (sum, i) => sum + (i.estimated_annual_value ?? 0), 0
   )
-  const monthlyEarnings = Math.round(annualEarnings / 12)
-  const paybackYears = annualEarnings > 0 ? Math.round((finalPrice / annualEarnings) * 10) / 10 : null
+  const annualTotal = annualVPPEarnings + annualBatterySavings
+  const monthlyTotal = Math.round(annualTotal / 12)
+  const paybackYears = annualTotal > 0 ? Math.round((finalPrice / annualTotal) * 10) / 10 : null
 
   return (
     <div
@@ -81,7 +85,7 @@ export default function BatteryPartnerCard({
           <span className="text-slate-500">Installed Price</span>
           <span className="text-slate-700 font-medium">
             {showRange ? (
-              <>${baseCost.toLocaleString()}–${highCost.toLocaleString()}</>
+              <>${baseCost.toLocaleString()}&ndash;${highCost.toLocaleString()}</>
             ) : (
               <>${baseCost.toLocaleString()}</>
             )}
@@ -128,7 +132,7 @@ export default function BatteryPartnerCard({
       </div>
 
       {/* Compact Payback Bar */}
-      {paybackYears !== null && annualEarnings > 0 && (
+      {paybackYears !== null && annualTotal > 0 && (
         <div className="mt-3 pt-2 border-t border-slate-200">
           <div className="flex justify-between text-xs mb-1">
             <span className="text-slate-500">Est. Payback</span>
@@ -143,9 +147,22 @@ export default function BatteryPartnerCard({
             />
           </div>
           <div className="flex justify-between text-xs text-slate-400 mt-0.5">
-            <span>~${monthlyEarnings}/mo earnings</span>
-            <span>~${annualEarnings.toLocaleString()}/yr</span>
+            <span>~${monthlyTotal}/mo value</span>
+            <span>~${annualTotal.toLocaleString()}/yr</span>
           </div>
+          {/* Show value breakdown when solar savings contribute */}
+          {annualBatterySavings > 0 && (
+            <div className="text-[11px] text-slate-400 mt-1 space-y-0.5">
+              <div className="flex justify-between">
+                <span>VPP earnings</span>
+                <span>${annualVPPEarnings.toLocaleString()}/yr</span>
+              </div>
+              <div className="flex justify-between text-emerald-600">
+                <span>Solar self-consumption</span>
+                <span>${annualBatterySavings.toLocaleString()}/yr</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -166,7 +183,7 @@ export default function BatteryPartnerCard({
                      py-2 rounded-md transition-colors cursor-pointer"
           onClick={(e) => { e.stopPropagation(); onSelect(battery) }}
         >
-          Calculate ROI
+          Calculate Full ROI
         </button>
       )}
     </div>

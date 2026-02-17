@@ -3,7 +3,7 @@
 // =============================================================================
 // Shows VPP programs for the "I Need a Battery" path.
 // Each VPP card is followed by compatible Battery Partner cards.
-// Users can click a battery to see the ROI calculator.
+// Each battery card shows inline payback including self-consumption savings.
 //
 // Filters:
 //   - By state (from zip code)
@@ -13,16 +13,14 @@
 
 'use client'
 
-import { useState } from 'react'
 import { VPP, UserSetup } from '@/types/vpp'
 import { Battery } from '@/types/battery'
 import { getStateName } from '@/lib/zipToState'
 import { BATTERY_SIZE_RANGES } from '@/lib/batterySizeRanges'
-import VPPCard from '@/components/vpp/VPPCard'
+import { calculateBatterySavings } from '@/lib/stateEnergyRates'
 import BatteryPartnerCard from '@/components/vpp/BatteryPartnerCard'
 import IncentiveBadges from '@/components/vpp/IncentiveBadges'
 import FlexibilityRating from '@/components/vpp/FlexibilityRating'
-import ROICalculator from './ROICalculator'
 
 interface BuyerVPPResultsProps {
   vpps: VPP[]
@@ -31,12 +29,6 @@ interface BuyerVPPResultsProps {
 }
 
 export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPPResultsProps) {
-  // Track which battery + VPP combo is selected for ROI calculation
-  const [selectedROI, setSelectedROI] = useState<{
-    battery: Battery
-    vpp: VPP
-  } | null>(null)
-
   // Filter batteries by selected capacity range
   const sizeRange = BATTERY_SIZE_RANGES.find((r) => r.key === userSetup.batterySizeRange)
   const filteredBatteries = sizeRange
@@ -63,7 +55,6 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
               vpp={vpp}
               batteries={filteredBatteries}
               userSetup={userSetup}
-              onSelectROI={(battery) => setSelectedROI({ battery, vpp })}
             />
           ))}
         </div>
@@ -131,28 +122,9 @@ export default function BuyerVPPResults({ vpps, batteries, userSetup }: BuyerVPP
             vpp={vpp}
             batteries={filteredBatteries}
             userSetup={userSetup}
-            onSelectROI={(battery) => setSelectedROI({ battery, vpp })}
           />
         ))}
       </div>
-
-      {/* ROI Calculator — shown when a battery is selected */}
-      {selectedROI && (
-        <div className="mt-6">
-          <ROICalculator
-            mode="buying-battery"
-            battery={selectedROI.battery}
-            vppName={selectedROI.vpp.name}
-            incentives={selectedROI.vpp.incentives}
-          />
-          <button
-            onClick={() => setSelectedROI(null)}
-            className="mt-2 text-sm text-slate-500 hover:text-slate-700 underline cursor-pointer"
-          >
-            Close calculator
-          </button>
-        </div>
-      )}
     </div>
   )
 }
@@ -162,12 +134,10 @@ function VPPWithBatteries({
   vpp,
   batteries,
   userSetup,
-  onSelectROI,
 }: {
   vpp: VPP
   batteries: Battery[]
   userSetup: UserSetup
-  onSelectROI: (battery: Battery) => void
 }) {
   // Check qualification
   const isQualified = !vpp.solar_required || userSetup.hasSolar
@@ -239,16 +209,28 @@ function VPPWithBatteries({
             Compatible Batteries
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {displayBatteries.map(({ battery, isRecommended }) => (
-              <BatteryPartnerCard
-                key={battery.id}
-                battery={battery}
-                purchaseIncentives={purchaseIncentives}
-                ongoingIncentives={ongoingIncentives}
-                isRecommended={isRecommended}
-                onSelect={onSelectROI}
-              />
-            ))}
+            {displayBatteries.map(({ battery, isRecommended }) => {
+              // Calculate self-consumption savings for this specific battery
+              const savings = userSetup.hasSolar && userSetup.state
+                ? calculateBatterySavings(
+                    userSetup.state,
+                    userSetup.solarSize,
+                    battery.capacity_kwh,
+                    true
+                  )
+                : null
+
+              return (
+                <BatteryPartnerCard
+                  key={battery.id}
+                  battery={battery}
+                  purchaseIncentives={purchaseIncentives}
+                  ongoingIncentives={ongoingIncentives}
+                  isRecommended={isRecommended}
+                  annualBatterySavings={savings?.annualSavings ?? 0}
+                />
+              )
+            })}
           </div>
         </div>
       )}
